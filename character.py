@@ -115,9 +115,14 @@ class Spawn:
         self.x = x
         self.y = y
         self.mask = mask
-        self.image = pygame.image.load(
-            "resources/images/spawn.png")
+        self.image = pygame.image.load("resources/images/spawn.png")
         self.rect = self.image.get_rect()
+
+
+        self.screen_rect = screen.get_rect()
+        # Start the character at the bottom center of the screen.
+        self.rect.centerx = 0 + width /2
+        self.rect.bottom = self.screen_rect.bottom - int(ground_width * 89 / 100)
 
     def spawn(self, item):
         """
@@ -126,8 +131,9 @@ class Spawn:
         """
         if self.can_spawn(item):
             item.is_active = True
-            item.rect.centerx = self.x
-            item.rect.centery = self.y
+            item.rect.centerx = self.rect.centerx
+            item.rect.centery = self.rect.centery
+            item.blitme()
             self.blitme()
 
     def can_spawn(self, item):

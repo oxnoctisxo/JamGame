@@ -22,4 +22,4 @@ ground_width = 170
 
 ANIMATION_TIME = 0.2
 
-VERBOSE = False
+VERBOSE = True

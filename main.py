@@ -86,7 +86,6 @@ while 1:
             print("Mouse doung left")
             player.is_attacking = True
 
-
             def delayed_animation():
                 time.sleep(ANIMATION_TIME)
                 player.is_attacking = False
@@ -96,14 +95,12 @@ while 1:
             t.start()
 
     screen.fill(blue_sky)
-    draw_ground(screen, ground_lvl=ground_lvl, ground_width=ground_width)
+    draw_ground(screen, ground_lvl=height, ground_width=ground_width)
     # manage charaters on the screen
     for character in characters:
         if not character.spawned and character.is_active:
             character.spawned = find_spawn_point_and_spawn(spawn_points=spawn_points, item=character)
-
         if character.is_active:
             character.update()
 
     pygame.display.flip()
-d

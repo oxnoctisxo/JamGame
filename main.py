@@ -94,7 +94,7 @@ def look_toward_the_mouse(player):
 
 
 while 1:
-    clock.tick(120)
+    clock.tick(60)
 
     for event in pygame.event.get():
         # check if the event is the X button

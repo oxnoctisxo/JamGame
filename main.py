@@ -49,7 +49,7 @@ player = Character(screen=screen, name="Paladin")
 player.is_active = True
 
 characters = [player, Character(screen=screen, name="Paladin")]
-spawn_points = [Spawn(20, 20, orientation=LEFT), Spawn(100, 100, orientation=RIGHT)]
+spawn_points = [Spawn(screen,20, 20, orientation=LEFT), Spawn(screen,100, 100, orientation=RIGHT)]
 
 while 1:
 

@@ -110,10 +110,14 @@ class Character(HitBox):
 
 class Spawn:
 
-    def __init__(self, x, y, orientation=RIGHT, mask=None, ):
+    def __init__(self,screen, x, y, orientation=RIGHT, mask=None, ):
+        self.screen = screen
         self.x = x
         self.y = y
         self.mask = mask
+        self.image = pygame.image.load(
+            "resources/images/spawn.png")
+        self.rect = self.image.get_rect()
 
     def spawn(self, item):
         """
@@ -124,6 +128,13 @@ class Spawn:
             item.is_active = True
             item.rect.centerx = self.x
             item.rect.centery = self.y
+            self.blitme()
 
     def can_spawn(self, item):
         return True
+
+    def orient(self, image, rect, orientation=RIGHT):
+        self.screen.blit(image if orientation == RIGHT else pygame.transform.flip(image, True, False), rect)
+
+    def blitme(self):
+        self.orient(self.image, self.rect, RIGHT)

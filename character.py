@@ -1,9 +1,31 @@
-from parametters import *
 import pygame
+from parametters import *
+from pygame.math import Vector2
 
-class Character:
+class HitBox(pygame.sprite.Sprite):
 
-    def __init__(self, screen, name="Paladin", is_forward=False):
+    def __init__(self, rect, is_rect=True):
+        super().__init__()
+        self.rect = rect
+        self.radius = (rect.x / 2) ** 2 + (rect.y / 2) ** 2  # (x/2) ^2 + (y/2) ^2
+        self.is_rect = is_rect
+
+    def touched(self, other_hitbox, ratio=1):
+        """
+        Returns true if there is an intersection between the two objects
+        :param other_hitbox:
+        :return:
+        """
+        return pygame.sprite.collide_rect(self, other_hitbox) if self.is_rect else pygame.sprite.collide_circle(self,
+                                                                                                                other_hitbox)
+
+    def ontouch(self, other):
+        print("Object touched")
+
+
+class Character(HitBox):
+
+    def __init__(self, screen, name="Paladin", is_forward=False,):
         self.screen = screen
         self.is_forward = is_forward
         self.image = pygame.image.load(
@@ -12,10 +34,11 @@ class Character:
             self.image = pygame.transform.flip(self.image, True, False)
         self.name = name
         self.rect = self.image.get_rect()
+        super().__init__(self.rect)
         self.screen_rect = screen.get_rect()
 
         # Start the character at the bottom center of the screen.
-        self.rect.centerx = 0 + 400 / 2
+        self.rect.centerx = 0 + width
         self.rect.bottom = self.screen_rect.bottom - int(ground_width * 89 / 100)
 
         # Speed of the character
@@ -32,10 +55,10 @@ class Character:
 
         self.direction = [RIGHT, LEFT]  # if is_forward else [LEFT, RIGHT]
         self.orientation = self.direction[0]
-        self.animation = None
+        self.animation = pygame.image.load("resources/images/slash.png")
+
 
     def attack(self):
-        animation = pygame.image.load("resources/images/slash.png")
         animation_rect = animation.get_rect()
         animation_rect.bottom = self.rect.bottom
 
@@ -78,3 +101,4 @@ class Character:
         self.orient(self.image, self.rect, self.orientation)
         if self.is_attacking and self.animation is not None:
             self.orient(self.animation, self.animation_rect, self.orientation)
+

@@ -5,3 +5,4 @@ venv
 vendor
 .idea/workspace.xml
 .idea/misc.xml
+.idea/*

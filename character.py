@@ -1,6 +1,7 @@
 import pygame
+
 from parametters import *
-from pygame.math import Vector2
+
 
 class HitBox(pygame.sprite.Sprite):
 
@@ -9,6 +10,8 @@ class HitBox(pygame.sprite.Sprite):
         self.rect = rect
         self.radius = (rect.x / 2) ** 2 + (rect.y / 2) ** 2  # (x/2) ^2 + (y/2) ^2
         self.is_rect = is_rect
+        self.is_active = False
+        self.spawned = False
 
     def touched(self, other_hitbox, ratio=1):
         """
@@ -20,12 +23,13 @@ class HitBox(pygame.sprite.Sprite):
                                                                                                                 other_hitbox)
 
     def ontouch(self, other):
-        print("Object touched")
+        if self.is_active:
+            print("Object touched")
 
 
 class Character(HitBox):
 
-    def __init__(self, screen, name="Paladin", is_forward=False,):
+    def __init__(self, screen, name="Paladin", is_forward=False, ):
         self.screen = screen
         self.is_forward = is_forward
         self.image = pygame.image.load(
@@ -57,9 +61,11 @@ class Character(HitBox):
         self.orientation = self.direction[0]
         self.animation = pygame.image.load("resources/images/slash.png")
 
+    def __str__(self):
+        return str(self.name)
 
     def attack(self):
-        animation_rect = animation.get_rect()
+        animation_rect = self.animation.get_rect()
         animation_rect.bottom = self.rect.bottom
 
         animation_rect.centerx = self.rect.centerx
@@ -69,7 +75,6 @@ class Character(HitBox):
         elif self.orientation == LEFT:
             animation_rect.centerx -= self.speed
 
-        self.animation = animation
         self.animation_rect = animation_rect
 
     def update(self):
@@ -100,5 +105,25 @@ class Character(HitBox):
     def blitme(self):
         self.orient(self.image, self.rect, self.orientation)
         if self.is_attacking and self.animation is not None:
-            self.orient(self.animation, self.animation_rect, self.orientation)
+            self.orient(self.animation, self.animation.get_rect(), self.orientation)
 
+
+class Spawn:
+
+    def __init__(self, x, y, orientation=RIGHT, mask=None, ):
+        self.x = x
+        self.y = y
+        self.mask = mask
+
+    def spawn(self, item):
+        """
+        Spawn an item if it can be spawned
+        :return:
+        """
+        if self.can_spawn(item):
+            item.is_active = True
+            item.rect.centerx = self.x
+            item.rect.centery = self.y
+
+    def can_spawn(self, item):
+        return True

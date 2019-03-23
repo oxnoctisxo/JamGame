@@ -157,8 +157,9 @@ class RigidBody(Character):
     def __init__(self, screen, x, y, filename="ground",dimension=RIGID_BODY_DIMENSIONS):
         super().__init__(screen, filename, True, dimension)
         self.screen = screen
-        self.x = x
-        self.y = y
+
+        self.rect.x = x
+        self.rect.y = y - dimension[1]
         self.is_active = True
         self.type = RIGID_BODY
 

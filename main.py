@@ -40,22 +40,22 @@ def find_spawn_point_and_spawn(spawn_points, item):
     return False
 
 
-
-
 (screen, width, height) = init_screen()
+
 
 # Draw the ground
 def draw_ground(screen):
     rigid_bodies = []
-    positions = [(0, height),(83, 712)]
+    positions = [(0, height), (83, 712)]
     i = 0
     for x, y in positions:
-        rigid_body = RigidBody(screen, x, y, filename="ground",
-                               dimension=(width*2, 30) if i == 0 else RIGID_BODY_DIMENSIONS)
+        rigid_body = RigidBody(screen, x, y, filename="transparent",
+                               dimension=(width * 2, 30) if i == 0 else RIGID_BODY_DIMENSIONS)
         screen.blit(rigid_body.image, (x, y))
         rigid_bodies.append(rigid_body)
         i += 1
     return rigid_bodies
+
 
 clock = pygame.time.Clock()
 ground_lvl = height - 100

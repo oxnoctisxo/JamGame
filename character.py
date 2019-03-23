@@ -43,15 +43,14 @@ class HitBox(pygame.sprite.Sprite):
             if collision_listener.is_active:
                 if self.touched(collision_listener):
                     self.ontouch()
-
-
 class Character(HitBox):
 
     def __init__(self, screen, name="Paladin", is_forward=False, ):
         self.screen = screen
         self.is_forward = is_forward
         self.image = pygame.image.load(
-            "resources/images/" + name.lower() + "_" + ("bw" if not is_forward else "fw") + ".png")
+            IMAGE_RESOURCES + name.lower() + "_" + ("bw" if not is_forward else "fw") + ".png")
+        self.image = pygame.transform.scale(self.image, CHARACTER_DIMENSIONS)
         if not is_forward:
             self.image = pygame.transform.flip(self.image, True, False)
         self.name = name
@@ -128,6 +127,15 @@ class Character(HitBox):
             self.orient(self.animation, self.animation_rect, self.orientation)
 
 
+class RigidBody(HitBox):
+
+
+    def __init__(self, screen, x, y):
+        self.screen = screen
+        self.x = x
+        self.y = y
+        self.type = RIGID_BODY
+
 class Spawn(pygame.sprite.Sprite):
 
     def __init__(self, screen, x, y, orientation=RIGHT, mask=None, type=ENNEMY_TYPË):
@@ -138,7 +146,7 @@ class Spawn(pygame.sprite.Sprite):
         self.image = pygame.image.load("resources/images/spawn.png")
         self.rect = self.image.get_rect()
 
-        self.tpe = type
+        self.type = type
         self.screen_rect = screen.get_rect()
         # Start the character at the bottom center of the screen.
         self.rect.centerx = 0 + width / 2

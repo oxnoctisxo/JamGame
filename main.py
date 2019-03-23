@@ -49,6 +49,15 @@ player = Character(screen=screen, name="Paladin")
 player.is_active = True
 player.type = PLAYER_TYPE
 
+# Mouse management
+
+pygame.mouse.set_visible(False)  # hide the cursor
+
+# Image for "manual" cursor
+mycursor = pygame.image.load(IMAGE_RESOURCES + 'target.png').convert_alpha()
+mycursor = pygame.transform.scale(mycursor, (40, 40))
+
+
 characters = [player, Character(screen=screen, name="Paladin")]
 
 characters[1].add_collision_listenr(player)
@@ -89,7 +98,10 @@ while 1:
                 player.moving_down = False
         # Allow attacking anytime
         if pygame.mouse.get_pressed()[0] and not player.is_attacking:
-            print("Mouse doung left")
+            mouse_pos = pygame.mouse.get_pos()
+            if VERBOSE:
+                print("Mouse down left")
+                print("MOUSEBUTTONDOWN pos=" + str(mouse_pos))
             player.is_attacking = True
 
             def delayed_animation():
@@ -110,4 +122,5 @@ while 1:
             character.update()
             character.blitme()
 
+    screen.blit(mycursor, (pygame.mouse.get_pos()))
     pygame.display.flip()

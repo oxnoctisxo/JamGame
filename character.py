@@ -30,7 +30,6 @@ class HitBox(pygame.sprite.Sprite):
 
     def ontouch(self):
         if self.is_active:
-
             if VERBOSE:
                 print("Object touched")
 
@@ -47,7 +46,7 @@ class HitBox(pygame.sprite.Sprite):
 
 class Character(HitBox):
 
-    def __init__(self, screen, name="Paladin", is_forward=False,dimensions= CHARACTER_DIMENSIONS):
+    def __init__(self, screen, name="Paladin", is_forward=False, dimensions=CHARACTER_DIMENSIONS):
         self.screen = screen
         self.is_forward = is_forward
         self.image = pygame.image.load(
@@ -79,6 +78,7 @@ class Character(HitBox):
         self.direction = [RIGHT, LEFT]  # if is_forward else [LEFT, RIGHT]
         self.orientation = self.direction[0]
         self.animation = pygame.image.load("resources/images/slash.png")
+        self.rigid_bodies = []
 
     def __str__(self):
         return str(self.name)
@@ -96,24 +96,48 @@ class Character(HitBox):
 
         self.animation_rect = animation_rect
 
+    def campled_movement(self, offset, isX=True):
+        """
+        Returns the closets version of the offest which doesn't collide with a wall
+        :param offset:
+        :param isX:
+        :return:
+        """
+        sol = offset
+        for i in range(0,abs(offset) +1):
+            ok_i = True
+            for rigid_body in self.rigid_bodies:
+                # Tries to predict a collision
+                intersection = self.rect.move(sol if isX else 0, sol if not isX else 0).clip(rigid_body.rect)
+                if intersection:
+                    if VERBOSE:
+                        print("Wall colision detected")
+                    ok_i = False
+                    break
+            if ok_i:
+                break
+            else:
+                sol += -1 if offset > 0 else 1
+        return sol
+
     def update(self):
         if self.rect.right <= self.screen_rect.right:
             if self.moving_right:
                 self.orientation = self.direction[0]
-                self.rect.centerx += self.speed
+                self.rect.centerx += self.campled_movement(self.speed, isX=True)
 
         if self.rect.left > 0:
             if self.moving_left:
                 self.orientation = self.direction[1]
-                self.rect.centerx -= self.speed
+                self.rect.centerx += self.campled_movement(-self.speed, isX=True)
 
         if self.rect.top > 0:
             if self.moving_up:
-                self.rect.bottom -= self.speed
+                self.rect.bottom += self.campled_movement(-self.speed, isX=False)
 
         if self.rect.bottom <= self.screen_rect.bottom:
             if self.moving_down:
-                self.rect.bottom += self.speed
+                self.rect.bottom += self.campled_movement(self.speed, isX=False)
 
         if self.is_attacking:
             self.attack()
@@ -132,12 +156,20 @@ class Character(HitBox):
 class RigidBody(Character):
 
     def __init__(self, screen, x, y, filename="ground"):
-        super().__init__(screen,filename,True,RIGID_BODY_DIMENSIONS)
+        super().__init__(screen, filename, True, RIGID_BODY_DIMENSIONS)
         self.screen = screen
         self.x = x
         self.y = y
         self.is_active = True
         self.type = RIGID_BODY
+
+    def update(self):
+        # Checks all the collisions
+        for collision_listener in self.collision_listeners:
+            if collision_listener.is_active:
+                if self.touched(collision_listener):
+                    self.ontouch()
+
 
 class Spawn(pygame.sprite.Sprite):
 

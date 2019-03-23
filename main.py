@@ -1,5 +1,6 @@
 import threading
 import time
+import os
 
 from character import *
 from colors import *
@@ -40,12 +41,13 @@ def find_spawn_point_and_spawn(spawn_points, item):
             return True
     return False
 
+
 # Draw the ground
 def draw_ground(screen):
     rigid_bodies = []
-    positions = [(83, 712) ]
-    for x,y in positions:
-        rigid_body = RigidBody(screen,x,y,filename="ground")
+    positions = [(83, 712)]
+    for x, y in positions:
+        rigid_body = RigidBody(screen, x, y, filename="ground")
         screen.blit(rigid_body.image, (x, y))
         rigid_bodies.append(rigid_body)
     return rigid_bodies
@@ -66,16 +68,27 @@ pygame.mouse.set_visible(False)  # hide the cursor
 # Image for "manual" cursor
 mycursor = pygame.image.load(IMAGE_RESOURCES + 'target.png')
 mycursor = pygame.transform.scale(mycursor, (40, 40))
-
+background = pygame.image.load(IMAGE_RESOURCES + 'background.png')
 
 characters = [player, Character(screen=screen, name="Paladin")]
 
-characters[1].add_collision_listenr(player)
-#for character in characters:
-    #character.is_active = True
+# for character in characters:
+# character.is_active = True
 
-spawn_points = [Spawn(screen,20, 20, orientation=LEFT,type=PLAYER_TYPE), Spawn(screen,100, 100, orientation=RIGHT)]
+spawn_points = [Spawn(screen, 20, 20, orientation=LEFT, type=PLAYER_TYPE), Spawn(screen, 100, 100, orientation=RIGHT)]
 rigid_bodies = draw_ground(screen)
+player.rigid_bodies.extend(rigid_bodies)
+
+characters[1].add_collision_listenr(player)
+# Add colistion detection
+for rigid_body in rigid_bodies:
+    characters[1].add_collision_listenr(player)
+
+
+def look_toward_the_mouse(player):
+    (m_x, m_y) = pygame.mouse.get_pos()
+    player.orientation = RIGHT if player.rect.centerx < m_x else LEFT
+
 
 while 1:
 
@@ -115,6 +128,7 @@ while 1:
                 print("MOUSEBUTTONDOWN pos=" + str(mouse_pos))
             player.is_attacking = True
 
+
             def delayed_animation():
                 time.sleep(ANIMATION_TIME)
                 player.is_attacking = False
@@ -124,7 +138,10 @@ while 1:
             t.start()
 
     screen.fill(blue_sky)
-    rigid_bodies = draw_ground(screen)
+    for rigid_body in rigid_bodies:
+        rigid_body.blitme()
+    # Orient player toward the mouse
+    look_toward_the_mouse(player)
     # manage charaters on the screen
     for character in characters:
         if not character.spawned and character.is_active:

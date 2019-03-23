@@ -108,7 +108,7 @@ class Character(HitBox):
             self.orient(self.animation, self.animation.get_rect(), self.orientation)
 
 
-class Spawn:
+class Spawn(pygame.sprite.Sprite):
 
     def __init__(self,screen, x, y, orientation=RIGHT, mask=None, ):
         self.screen = screen
@@ -133,6 +133,7 @@ class Spawn:
             item.is_active = True
             item.rect.centerx = self.rect.centerx
             item.rect.centery = self.rect.centery
+            item.spawned = True
             item.blitme()
             self.blitme()
 
@@ -140,7 +141,7 @@ class Spawn:
         return True
 
     def orient(self, image, rect, orientation=RIGHT):
-        self.screen.blit(image if orientation == RIGHT else pygame.transform.flip(image, True, False), rect)
+        self.screen.blit(image, rect)
 
     def blitme(self):
         self.orient(self.image, self.rect, RIGHT)

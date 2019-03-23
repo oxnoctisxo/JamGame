@@ -49,6 +49,8 @@ player = Character(screen=screen, name="Paladin")
 player.is_active = True
 
 characters = [player, Character(screen=screen, name="Paladin")]
+for character in characters:
+    character.is_active = True
 spawn_points = [Spawn(screen,20, 20, orientation=LEFT), Spawn(screen,100, 100, orientation=RIGHT)]
 
 while 1:
@@ -99,8 +101,9 @@ while 1:
     # manage charaters on the screen
     for character in characters:
         if not character.spawned and character.is_active:
-            character.spawned = find_spawn_point_and_spawn(spawn_points=spawn_points, item=character)
+            find_spawn_point_and_spawn(spawn_points=spawn_points, item=character)
         if character.is_active:
             character.update()
+            character.blitme()
 
     pygame.display.flip()

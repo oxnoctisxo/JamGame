@@ -145,8 +145,8 @@ class Character(HitBox):
         if self.is_attacking:
             self.attack()
 
-        if self.type == ENNEMY_TYPE:
-            if
+        #if self.type == ENNEMY_TYPE:
+
 
         self.hitbox_update()
 

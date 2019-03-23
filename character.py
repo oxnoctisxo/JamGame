@@ -145,8 +145,6 @@ class Character(HitBox):
         if self.is_attacking:
             self.attack()
 
-        #if self.type == ENNEMY_TYPE:
-
 
         self.hitbox_update()
 
@@ -221,3 +219,14 @@ class Spawn(pygame.sprite.Sprite):
 
     def blitme(self):
         self.orient(self.image, self.rect, RIGHT)
+
+
+class EnnemyAI1:
+
+    def __init__(self, characters=[]):
+        self.characters = characters
+
+
+    def update(self):
+        pass
+    

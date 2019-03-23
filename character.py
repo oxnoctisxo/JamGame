@@ -64,7 +64,8 @@ class Character(HitBox):
         self.rect.bottom = self.screen_rect.bottom - int(ground_width * 89 / 100)
 
         # Speed of the character
-        self.speed = 6
+        self.speedx = 6
+        self.speedy = 6
         self.min_speed = self.speed
         self.center = float(self.speed)
 
@@ -81,6 +82,42 @@ class Character(HitBox):
         self.rigid_bodies = []
         self.type = ENNEMY_TYPE
 
+        # Jumping animation
+
+        self.jumping_animation = []
+        self.jumping_animation.extend([self.move_up] * 40)
+        self.jumping_animation.extend([self.move_down] * 40)
+        self.jumping_animation_indice = 0
+        self.is_jumping = False
+
+    def jump(self):
+        if not self.is_jumping:
+            self.is_jumping = True
+            self.jumping_animation_indice = 0
+
+    def manage_jump(self):
+        if self.jumping_animation_indice < len(self.jumping_animation) and self.is_jumping:
+            self.jumping_animation[self.jumping_animation_indice]()
+            self.jumping_animation_indice = self.jumping_animation_indice + 1
+            if VERBOSE:
+                print("Jumping",self.jumping_animation_indice)
+        else:
+            self.is_jumping = False
+            self.jumping_animation_indice = 0
+
+    def move_up(self, val=True):
+        self.moving_up = val
+        self.speed = -abs(self.speed)
+
+    def move_down(self, val=True):
+        self.moving_up = val
+        self.speed = abs(self.speed)
+
+    def move_left(self, val=True):
+        self.moving_left = val
+
+    def move_right(self, val=True):
+        self.moving_right = val
 
     def __str__(self):
         return str(self.name)
@@ -140,11 +177,16 @@ class Character(HitBox):
 
         if self.rect.bottom <= self.screen_rect.bottom:
             if self.moving_down:
-                self.rect.bottom += self.campled_movement(self.speed, isX=False)
+                real_offset = self.campled_movement(self.speed, isX=False)
+                self.rect.bottom += real_offset
+                # If we did hit the ground
+                # if real_offset != self.speed:
+                #    self.jumping = False
+                #    self.jumping_animation_indice = 0
 
+        self.manage_jump()
         if self.is_attacking:
             self.attack()
-
 
         self.hitbox_update()
 
@@ -174,6 +216,7 @@ class RigidBody(Character):
             if collision_listener.is_active:
                 if self.touched(collision_listener):
                     self.ontouch()
+
 
 class Spawn(pygame.sprite.Sprite):
 
@@ -226,7 +269,5 @@ class EnnemyAI1:
     def __init__(self, characters=[]):
         self.characters = characters
 
-
     def update(self):
         pass
-    

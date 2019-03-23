@@ -4,6 +4,7 @@ import threading
 from parametters import *
 from utils import *
 from colors import *
+from character import *
 
 def init_screen():
     """
@@ -15,3 +16,6 @@ def init_screen():
     return screen
 
 screen = init_screen()
+
+
+player = Character(screen=screen, name="Paladin")

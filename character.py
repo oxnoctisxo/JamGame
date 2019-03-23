@@ -1,4 +1,5 @@
 from parametters import *
+import pygame
 
 class Character:
 

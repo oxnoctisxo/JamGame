@@ -10,7 +10,10 @@ DOWN = "Down"
 LEFT_CLICK = 1
 RIGHT_CLICK = 3
 
+# Types
 
+PLAYER_TYPE = 0
+ENNEMY_TYPË = 1
 
 
 # Screen related informations

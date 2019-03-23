@@ -47,11 +47,15 @@ ground_lvl = height - 100
 
 player = Character(screen=screen, name="Paladin")
 player.is_active = True
+player.type = PLAYER_TYPE
 
 characters = [player, Character(screen=screen, name="Paladin")]
+
+characters[1].add_collision_listenr(player)
 for character in characters:
     character.is_active = True
-spawn_points = [Spawn(screen,20, 20, orientation=LEFT), Spawn(screen,100, 100, orientation=RIGHT)]
+
+spawn_points = [Spawn(screen,20, 20, orientation=LEFT,type=PLAYER_TYPE), Spawn(screen,100, 100, orientation=RIGHT)]
 
 while 1:
 

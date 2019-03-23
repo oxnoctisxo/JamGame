@@ -12,19 +12,37 @@ class HitBox(pygame.sprite.Sprite):
         self.is_rect = is_rect
         self.is_active = False
         self.spawned = False
+        self.collision_listeners = []
+        self.type = ENNEMY_TYPË
 
-    def touched(self, other_hitbox, ratio=1):
+    def touched(self, other_hitbox, ratio=0.9):
         """
         Returns true if there is an intersection between the two objects
         :param other_hitbox:
         :return:
         """
-        return pygame.sprite.collide_rect(self, other_hitbox) if self.is_rect else pygame.sprite.collide_circle(self,
-                                                                                                                other_hitbox)
 
-    def ontouch(self, other):
+        intersection = self.rect.clip(other_hitbox.rect)
+        return intersection.width != 0 or intersection.height != 0
+        # return
+        #   pygame.sprite.collide_rect(self, other_hitbox) if self.is_rect else pygame.sprite.collide_circle(self,
+        #                                                                                                   other_hitbox)
+
+    def ontouch(self):
         if self.is_active:
-            print("Object touched")
+
+            if VERBOSE:
+                print("Object touched")
+
+    def add_collision_listenr(self, collision_listener):
+        self.collision_listeners.append(collision_listener)
+
+    def hitbox_update(self):
+        # Checks all the collisions
+        for collision_listener in self.collision_listeners:
+            if collision_listener.is_active:
+                if self.touched(collision_listener):
+                    self.ontouch()
 
 
 class Character(HitBox):
@@ -99,18 +117,20 @@ class Character(HitBox):
         if self.is_attacking:
             self.attack()
 
+        self.hitbox_update()
+
     def orient(self, image, rect, orientation=RIGHT):
         self.screen.blit(image if orientation == RIGHT else pygame.transform.flip(image, True, False), rect)
 
     def blitme(self):
         self.orient(self.image, self.rect, self.orientation)
         if self.is_attacking and self.animation is not None:
-            self.orient(self.animation, self.animation.get_rect(), self.orientation)
+            self.orient(self.animation, self.animation_rect, self.orientation)
 
 
 class Spawn(pygame.sprite.Sprite):
 
-    def __init__(self,screen, x, y, orientation=RIGHT, mask=None, ):
+    def __init__(self, screen, x, y, orientation=RIGHT, mask=None, type=ENNEMY_TYPË):
         self.screen = screen
         self.x = x
         self.y = y
@@ -118,10 +138,10 @@ class Spawn(pygame.sprite.Sprite):
         self.image = pygame.image.load("resources/images/spawn.png")
         self.rect = self.image.get_rect()
 
-
+        self.tpe = type
         self.screen_rect = screen.get_rect()
         # Start the character at the bottom center of the screen.
-        self.rect.centerx = 0 + width /2
+        self.rect.centerx = 0 + width / 2
         self.rect.bottom = self.screen_rect.bottom - int(ground_width * 89 / 100)
 
     def spawn(self, item):
@@ -138,7 +158,13 @@ class Spawn(pygame.sprite.Sprite):
             self.blitme()
 
     def can_spawn(self, item):
-        return True
+        """
+        Tells if an item is allowed to spawn somewhere
+        TODO : Use byte masks ( since they can be added etc... ) instead of constants
+        :param item:
+        :return:
+        """
+        return self.type == item.type
 
     def orient(self, image, rect, orientation=RIGHT):
         self.screen.blit(image, rect)

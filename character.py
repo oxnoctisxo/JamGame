@@ -64,7 +64,7 @@ class Character(HitBox):
         self.rect.bottom = self.screen_rect.bottom - int(ground_width * 89 / 100)
 
         # Speed of the character
-        self.speed = 3
+        self.speed = 6
         self.min_speed = self.speed
         self.center = float(self.speed)
 
@@ -110,8 +110,7 @@ class Character(HitBox):
                 # Tries to predict a collision
                 intersection = self.rect.move(sol if isX else 0, sol if not isX else 0).clip(rigid_body.rect)
                 if intersection:
-                    if VERBOSE:
-                        print("Wall colision detected")
+                    #If a wall collision was predicted
                     ok_i = False
                     break
             if ok_i:
@@ -155,8 +154,8 @@ class Character(HitBox):
 
 class RigidBody(Character):
 
-    def __init__(self, screen, x, y, filename="ground"):
-        super().__init__(screen, filename, True, RIGID_BODY_DIMENSIONS)
+    def __init__(self, screen, x, y, filename="ground",dimension=RIGID_BODY_DIMENSIONS):
+        super().__init__(screen, filename, True, dimension)
         self.screen = screen
         self.x = x
         self.y = y

@@ -1,9 +1,7 @@
 import threading
 import time
-import os
 
 from character import *
-from colors import *
 from my_utils import *
 
 
@@ -42,19 +40,24 @@ def find_spawn_point_and_spawn(spawn_points, item):
     return False
 
 
-# Draw the ground
-def draw_ground(screen):
-    rigid_bodies = []
-    positions = [(83, 712)]
-    for x, y in positions:
-        rigid_body = RigidBody(screen, x, y, filename="ground")
-        screen.blit(rigid_body.image, (x, y))
-        rigid_bodies.append(rigid_body)
-    return rigid_bodies
 
 
 (screen, width, height) = init_screen()
 
+# Draw the ground
+def draw_ground(screen):
+    rigid_bodies = []
+    positions = [(0, height),(83, 712)]
+    i = 0
+    for x, y in positions:
+        rigid_body = RigidBody(screen, x, y, filename="ground",
+                               dimension=(width*2, 30) if i == 0 else RIGID_BODY_DIMENSIONS)
+        screen.blit(rigid_body.image, (x, y))
+        rigid_bodies.append(rigid_body)
+        i += 1
+    return rigid_bodies
+
+clock = pygame.time.Clock()
 ground_lvl = height - 100
 
 player = Character(screen=screen, name="Paladin")
@@ -69,7 +72,7 @@ pygame.mouse.set_visible(False)  # hide the cursor
 mycursor = pygame.image.load(IMAGE_RESOURCES + 'target.png')
 mycursor = pygame.transform.scale(mycursor, (40, 40))
 background = pygame.image.load(IMAGE_RESOURCES + 'background.png')
-
+background = pygame.transform.scale(background, (width, height))
 characters = [player, Character(screen=screen, name="Paladin")]
 
 # for character in characters:
@@ -91,6 +94,7 @@ def look_toward_the_mouse(player):
 
 
 while 1:
+    clock.tick(120)
 
     for event in pygame.event.get():
         # check if the event is the X button
@@ -137,7 +141,7 @@ while 1:
             t = threading.Thread(target=delayed_animation)
             t.start()
 
-    screen.fill(blue_sky)
+    screen.blit(background, (0, 0))
     for rigid_body in rigid_bodies:
         rigid_body.blitme()
     # Orient player toward the mouse

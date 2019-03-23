@@ -13,11 +13,13 @@ RIGHT_CLICK = 3
 # Types (mainly used for collision
 
 PLAYER_TYPE = 0
-ENNEMY_TYPË = 1
+ENNEMY_TYPE = 1
 RIGID_BODY = 2
 # Visual Informations
 
 CHARACTER_DIMENSIONS = (150, 150)
+RIGID_BODY_DIMENSIONS = (50, 50)
+
 
 
 # Screen related informations

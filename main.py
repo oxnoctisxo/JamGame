@@ -40,6 +40,16 @@ def find_spawn_point_and_spawn(spawn_points, item):
             return True
     return False
 
+# Draw the ground
+def draw_ground(screen):
+    rigid_bodies = []
+    positions = [(83, 712) ]
+    for x,y in positions:
+        rigid_body = RigidBody(screen,x,y,filename="ground")
+        screen.blit(rigid_body.image, (x, y))
+        rigid_bodies.append(rigid_body)
+    return rigid_bodies
+
 
 (screen, width, height) = init_screen()
 
@@ -54,17 +64,18 @@ player.type = PLAYER_TYPE
 pygame.mouse.set_visible(False)  # hide the cursor
 
 # Image for "manual" cursor
-mycursor = pygame.image.load(IMAGE_RESOURCES + 'target.png').convert_alpha()
+mycursor = pygame.image.load(IMAGE_RESOURCES + 'target.png')
 mycursor = pygame.transform.scale(mycursor, (40, 40))
 
 
 characters = [player, Character(screen=screen, name="Paladin")]
 
 characters[1].add_collision_listenr(player)
-for character in characters:
-    character.is_active = True
+#for character in characters:
+    #character.is_active = True
 
 spawn_points = [Spawn(screen,20, 20, orientation=LEFT,type=PLAYER_TYPE), Spawn(screen,100, 100, orientation=RIGHT)]
+rigid_bodies = draw_ground(screen)
 
 while 1:
 
@@ -113,7 +124,7 @@ while 1:
             t.start()
 
     screen.fill(blue_sky)
-    draw_ground(screen, ground_lvl=height, ground_width=ground_width)
+    rigid_bodies = draw_ground(screen)
     # manage charaters on the screen
     for character in characters:
         if not character.spawned and character.is_active:

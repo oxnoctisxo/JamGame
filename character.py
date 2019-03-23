@@ -13,7 +13,7 @@ class HitBox(pygame.sprite.Sprite):
         self.is_active = False
         self.spawned = False
         self.collision_listeners = []
-        self.type = ENNEMY_TYPË
+        self.type = ENNEMY_TYPE
 
     def touched(self, other_hitbox, ratio=0.9):
         """
@@ -43,14 +43,16 @@ class HitBox(pygame.sprite.Sprite):
             if collision_listener.is_active:
                 if self.touched(collision_listener):
                     self.ontouch()
+
+
 class Character(HitBox):
 
-    def __init__(self, screen, name="Paladin", is_forward=False, ):
+    def __init__(self, screen, name="Paladin", is_forward=False,dimensions= CHARACTER_DIMENSIONS):
         self.screen = screen
         self.is_forward = is_forward
         self.image = pygame.image.load(
             IMAGE_RESOURCES + name.lower() + "_" + ("bw" if not is_forward else "fw") + ".png")
-        self.image = pygame.transform.scale(self.image, CHARACTER_DIMENSIONS)
+        self.image = pygame.transform.scale(self.image, dimensions)
         if not is_forward:
             self.image = pygame.transform.flip(self.image, True, False)
         self.name = name
@@ -109,7 +111,7 @@ class Character(HitBox):
             if self.moving_up:
                 self.rect.bottom -= self.speed
 
-        if self.rect.bottom <= self.screen_rect.bottom - int(ground_width * 90 / 100):
+        if self.rect.bottom <= self.screen_rect.bottom:
             if self.moving_down:
                 self.rect.bottom += self.speed
 
@@ -127,25 +129,27 @@ class Character(HitBox):
             self.orient(self.animation, self.animation_rect, self.orientation)
 
 
-class RigidBody(HitBox):
+class RigidBody(Character):
 
-
-    def __init__(self, screen, x, y):
+    def __init__(self, screen, x, y, filename="ground"):
+        super().__init__(screen,filename,True,RIGID_BODY_DIMENSIONS)
         self.screen = screen
         self.x = x
         self.y = y
+        self.is_active = True
         self.type = RIGID_BODY
 
 class Spawn(pygame.sprite.Sprite):
 
-    def __init__(self, screen, x, y, orientation=RIGHT, mask=None, type=ENNEMY_TYPË):
+    def __init__(self, screen, x, y, orientation=RIGHT, mask=None, type=ENNEMY_TYPE):
+        super().__init__()
+
         self.screen = screen
         self.x = x
         self.y = y
         self.mask = mask
         self.image = pygame.image.load("resources/images/spawn.png")
         self.rect = self.image.get_rect()
-
         self.type = type
         self.screen_rect = screen.get_rect()
         # Start the character at the bottom center of the screen.

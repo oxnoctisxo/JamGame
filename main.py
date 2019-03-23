@@ -75,6 +75,8 @@ background = pygame.image.load(IMAGE_RESOURCES + 'background.png')
 background = pygame.transform.scale(background, (width, height))
 characters = [player, Character(screen=screen, name="Paladin")]
 
+ennemies = [Character(screen,name="Ennmy1")]
+
 # for character in characters:
 # character.is_active = True
 
@@ -94,7 +96,7 @@ def look_toward_the_mouse(player):
 
 
 while 1:
-    clock.tick(60)
+    # clock.tick(60)
 
     for event in pygame.event.get():
         # check if the event is the X button
@@ -105,24 +107,24 @@ while 1:
 
         # Keydown events
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 player.moving_right = True
-            elif event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 player.moving_left = True
-            elif event.key == pygame.K_UP:
+            elif event.key == pygame.K_UP or event.key == pygame.K_w:
                 player.moving_up = True
-            elif event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 player.moving_down = True
 
         # Keyup events
         elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                 player.moving_right = False
-            elif event.key == pygame.K_LEFT:
+            elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 player.moving_left = False
-            elif event.key == pygame.K_UP:
+            elif event.key == pygame.K_UP or event.key == pygame.K_w:
                 player.moving_up = False
-            elif event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 player.moving_down = False
         # Allow attacking anytime
         if pygame.mouse.get_pressed()[0] and not player.is_attacking:

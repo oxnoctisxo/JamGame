@@ -79,6 +79,8 @@ class Character(HitBox):
         self.orientation = self.direction[0]
         self.animation = pygame.image.load("resources/images/slash.png")
         self.rigid_bodies = []
+        self.type = ENNEMY_TYPE
+
 
     def __str__(self):
         return str(self.name)
@@ -104,13 +106,13 @@ class Character(HitBox):
         :return:
         """
         sol = offset
-        for i in range(0,abs(offset) +1):
+        for i in range(0, abs(offset) + 1):
             ok_i = True
             for rigid_body in self.rigid_bodies:
                 # Tries to predict a collision
                 intersection = self.rect.move(sol if isX else 0, sol if not isX else 0).clip(rigid_body.rect)
                 if intersection:
-                    #If a wall collision was predicted
+                    # If a wall collision was predicted
                     ok_i = False
                     break
             if ok_i:
@@ -120,6 +122,8 @@ class Character(HitBox):
         return sol
 
     def update(self):
+        if not self.is_active:
+            return
         if self.rect.right <= self.screen_rect.right:
             if self.moving_right:
                 self.orientation = self.direction[0]
@@ -141,6 +145,9 @@ class Character(HitBox):
         if self.is_attacking:
             self.attack()
 
+        if self.type == ENNEMY_TYPE:
+            if
+
         self.hitbox_update()
 
     def orient(self, image, rect, orientation=RIGHT):
@@ -154,7 +161,7 @@ class Character(HitBox):
 
 class RigidBody(Character):
 
-    def __init__(self, screen, x, y, filename="ground",dimension=RIGID_BODY_DIMENSIONS):
+    def __init__(self, screen, x, y, filename="ground", dimension=RIGID_BODY_DIMENSIONS):
         super().__init__(screen, filename, True, dimension)
         self.screen = screen
 
@@ -169,7 +176,6 @@ class RigidBody(Character):
             if collision_listener.is_active:
                 if self.touched(collision_listener):
                     self.ontouch()
-
 
 class Spawn(pygame.sprite.Sprite):
 

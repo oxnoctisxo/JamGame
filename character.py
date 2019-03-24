@@ -1,5 +1,6 @@
 import pygame
 
+from main import projectiles
 from parametters import *
 
 
@@ -28,7 +29,7 @@ class HitBox(pygame.sprite.Sprite):
         #   pygame.sprite.collide_rect(self, other_hitbox) if self.is_rect else pygame.sprite.collide_circle(self,
         #                                                                                                   other_hitbox)
 
-    def ontouch(self):
+    def ontouch(self, collision_listener):
         if self.is_active:
             if VERBOSE:
                 print("Object touched")
@@ -41,7 +42,7 @@ class HitBox(pygame.sprite.Sprite):
         for collision_listener in self.collision_listeners:
             if collision_listener.is_active:
                 if self.touched(collision_listener):
-                    self.ontouch()
+                    self.ontouch(collision_listener)
 
 
 class Character(HitBox):
@@ -64,10 +65,10 @@ class Character(HitBox):
         self.rect.bottom = self.screen_rect.bottom - int(ground_width * 89 / 100)
 
         # Speed of the character
-        self.speedx = 6
-        self.speedy = 6
-        self.initial_speed = self.speedx
-        self.center = float(self.speedx)
+        self.speed_x = 6
+        self.speed_y = 6
+        self.initial_speed = self.speed_x
+        self.center = float(self.speed_x)
 
         # Set a variable for each movement.
         self.moving_horizontally = False
@@ -88,6 +89,10 @@ class Character(HitBox):
         self.jumping_animation_indice = 0
         self.is_jumping = False
 
+        # Projectile
+        self.projectiles = []
+        self.projectileAI = ProjectileAI(self.projectiles)
+
     def jump(self):
         if not self.is_jumping:
             self.is_jumping = True
@@ -105,32 +110,37 @@ class Character(HitBox):
 
     def move_up(self, val=True, multiplier=1):
         self.moving_vertically = val
-        self.speedy = -abs(self.initial_speed * multiplier)
+        self.speed_y = -abs(self.initial_speed * multiplier)
 
     def move_down(self, val=True, multiplier=1):
         self.moving_vertically = val
-        self.speedy = abs(self.initial_speed * multiplier)
+        self.speed_y = abs(self.initial_speed * multiplier)
 
     def move_right(self, val=True, multiplier=1):
         self.moving_horizontally = val
-        self.speedx = abs(self.initial_speed * multiplier)
+        self.speed_x = abs(self.initial_speed * multiplier)
 
     def move_left(self, val=True, multiplier=1):
         self.moving_horizontally = val
-        self.speedx = -abs(self.initial_speed * multiplier)
+        self.speed_x = -abs(self.initial_speed * multiplier)
 
     def __str__(self):
         return str(self.name)
 
     def attack(self):
-        animation_rect = self.animation.get_rect()
-        animation_rect.bottom = self.rect.bottom
-
-        animation_rect.centerx = self.rect.centerx
-
-        animation_rect.centerx += self.speedx
-
-        self.animation_rect = animation_rect
+        if self.type == PLAYER_TYPE:
+            p = Projectile(self.screen, origin=self.type)
+            p.orientation = self.orientation
+            self.projectiles.append(p)
+        #
+        # animation_rect = self.animation.get_rect()
+        # animation_rect.bottom = self.rect.bottom
+        #
+        # animation_rect.centerx = self.rect.centerx
+        #
+        # animation_rect.centerx += self.speed_x
+        #
+        # self.animation_rect = animation_rect
 
     def campled_movement(self, offset, isX=True):
         """
@@ -164,17 +174,19 @@ class Character(HitBox):
     def update(self):
         if not self.is_active:
             return
+        self.projectileAI.update()
+
         if self.can_move_right() and self.can_move_left():
             if self.moving_horizontally:
-                self.orientation = self.direction[0] if self.speedx >= 0 else self.direction[1]
-                self.rect.centerx += self.campled_movement(self.speedx, isX=True)
+                self.orientation = self.direction[0] if self.speed_x >= 0 else self.direction[1]
+                self.rect.centerx += self.campled_movement(self.speed_x, isX=True)
 
         if self.rect.top > 0 and self.rect.bottom <= self.screen_rect.bottom:
             if self.moving_vertically:
-                real_offset = self.campled_movement(self.speedy, isX=False)
+                real_offset = self.campled_movement(self.speed_y, isX=False)
                 self.rect.bottom += real_offset
                 # If we did hit the ground
-                if real_offset != self.speedy:
+                if real_offset != self.speed_y:
                     self.jumping = False
                     self.jumping_animation_indice = 0
 
@@ -258,6 +270,20 @@ class Spawn(pygame.sprite.Sprite):
         self.orient(self.image, self.rect, RIGHT)
 
 
+class ProjectileAI:
+
+    def __init__(self, projectiles=[]):
+        self.projectiles = projectiles
+
+    def update(self):
+        for projectile in self.projectiles:
+            if projectile.is_active:
+                if projectile.orientation == RIGHT:
+                    projectile.move_right(multiplier=3)
+                else:
+                    projectile.move_left(multiplier=3)
+
+
 class EnnemyAI1:
 
     def __init__(self, characters=[]):
@@ -273,19 +299,23 @@ class EnnemyAI1:
             if character.orientation == RIGHT:
                 character.move_right()
             else:
+                print("Ennemy moving left")
                 character.move_left()
 
-class Projectile:
-    def __init__(self, x,y,speed_x,speed_y,origin):
-        self.x = x
-        self.y = y
-        self.speed_x = speed_x
-        self.speed_y = speed_y
-        self.sender_type = origin
-    def move(self):
-        self.x += speed_x
-        self.y += speed_y
 
+class Projectile(Character):
+    def __init__(self, screen, name="Projectile", is_forward=False, dimensions=PROJECTILE_DIMENSIONS,
+                 origin=ENNEMY_TYPE):
+        super().__init__(screen, name, False, dimensions)
+        self.sender_type = origin
+        self.is_active = True
+        projectiles.append(self)
+
+    def ontouch(self, collision_listener):
+        if self.is_active:
+            if self.sender_type == ENNEMY_TYPE:
+                collision_listener.on_hit()
+            self.is_active = False
 
 # class Boss:
 #

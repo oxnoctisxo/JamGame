@@ -80,13 +80,18 @@ characters = [player, Character(screen=screen, name="Paladin")]
 
 ennemies = [Character(screen, name="Ennmy1")]
 
-# for character in characters:
-# character.is_active = True
+for ennemy in ennemies:
+    ennemy.is_active = True
 
 spawn_points = [Spawn(screen, 20, 20, orientation=LEFT, type=PLAYER_TYPE), Spawn(screen, 100, 100, orientation=RIGHT)]
 
+
+# AI management
 ais = []
 ais.append(EnnemyAI1(ennemies))
+
+#Projectiles management
+projectiles = []
 
 characters[1].add_collision_listenr(player)
 # Add colistion detection

@@ -95,6 +95,7 @@ class EnemyAIBoss:
             self.i = 0
         current_time = time.time()
         if not self.character.is_active and current_time - self.last_death < BOSS_TIMER:
+            print("Resurrected")
             self.character.set_active(True)
 
 
@@ -108,6 +109,7 @@ class EnemyAIBoss:
             self.character.hit = False
             self.character.hp -= 1
             if self.character.hp <= 0:
+                print("Boss died")
                 self.character.set_active(False)
                 self.last_death  = current_time
                 self.i = 0

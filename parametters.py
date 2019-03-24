@@ -44,7 +44,7 @@ IMAGE_RESOURCES = "resources/images/"
 SOUND_RESOURCES = "resources/sounds/"
 
 #TIMERS
-BOSS_TIMER = 600
+BOSS_TIMER = 6
 
 VERBOSE = True
 

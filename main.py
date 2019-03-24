@@ -1,12 +1,11 @@
 import os
-
+import random
 from character import *
 from my_utils import *
 
 def play_normal_sound():
     pygame.mixer.music.load(SOUND_RESOURCES + 'idle.ogg')
     pygame.mixer.music.play(-1)
-
 
 def init_screen():
     """
@@ -203,7 +202,16 @@ while 1:
             x, y = pvs[i]
             screen.blit(pv_image, (x, y))
 
-
+    show_popup = rand.randint(0,10)==7
+    if show_popup:
+        press = False
+        while not press:
+            clock.tick(60)
+            screen.blit(background, (0, 0))
+            screen.blit(pygame.transform.scale(pygame.image.load(IMAGE_RESOURCES+"popup_bw.png"),(width,height)),(0,0))
+            press = 0.83*width<pygame.mouse.get_pos()[0]<width and 0<pygame.mouse.get_pos()[1]<0.18
+            screen.blit(mycursor, (pygame.mouse.get_pos()))
+            pygame.display.flip()
     compute_ennemies()
     print_pv()
     # q = queue.Queue()

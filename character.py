@@ -6,6 +6,18 @@ import pygame
 from ais import *
 from parametters import *
 
+images_cache = {}
+def get_image_for(name,dimensions, is_forward=False):
+    if (name + ("bw" if not is_forward else "fw")) not in images_cache :
+        image = pygame.image.load(
+            IMAGE_RESOURCES + name.lower() + "_" + ("bw" if not is_forward else "fw") + ".png")
+        image = pygame.transform.scale(image, dimensions)
+        if not is_forward:
+            image= pygame.transform.flip(image, True, False)
+        images_cache[name + ("bw" if not is_forward else "fw")] = image
+        return image
+    else:
+        return images_cache[name + ("bw" if not is_forward else "fw")]
 
 class HitBox(pygame.sprite.Sprite):
 
@@ -76,11 +88,7 @@ class Character(HitBox):
     def __init__(self, screen, name="Paladin", is_forward=False, dimensions=CHARACTER_DIMENSIONS):
         self.screen = screen
         self.is_forward = is_forward
-        self.image = pygame.image.load(
-            IMAGE_RESOURCES + name.lower() + "_" + ("bw" if not is_forward else "fw") + ".png")
-        self.image = pygame.transform.scale(self.image, dimensions)
-        if not is_forward:
-            self.image = pygame.transform.flip(self.image, True, False)
+        self.image = get_image_for(name=name,dimensions=dimensions,is_forward=is_forward)
         self.name = name
         self.rect = self.image.get_rect()
         super().__init__(self.rect)
@@ -398,7 +406,7 @@ class Projectile(Character):
 
         self.manage_jump()
         if self.name.lower() == "spinner":
-            pygame.mixer.Channel(1).play(self.spinner_sound)
+            pygame.mixer.Channel(2).play(self.spinner_sound)
 
     def orient(self, image, rect, orientation=RIGHT):
         if self.spin_direction == 0:
@@ -483,7 +491,10 @@ class Boss(Character):
             self.play_normal_sound()
         else:
             self.is_active = True
+            self.hit = False
+            self.jumping = False
             self.hp = 50
+            self.play_boss_sound()
 
     def attack(self):
         current_time = time.time()

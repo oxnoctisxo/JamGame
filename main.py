@@ -1,17 +1,20 @@
 import os
-import random
+
 from character import *
 from my_utils import *
+
 
 def play_normal_sound():
     pygame.mixer.music.load(SOUND_RESOURCES + 'idle.ogg')
     pygame.mixer.music.play(-1)
+
 
 def init_screen():
     """
     Initialize the screen with width and height
     :return:
     """
+    os.name
     x = 60
     y = 60
     os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x, y)
@@ -51,8 +54,10 @@ def find_spawn_point_and_spawn(spawn_points, item):
     return False
 
 
-
 (screen, width, height, pv_image, pvs) = init_screen()
+
+pop_up_cache = pygame.image.load(IMAGE_RESOURCES + "popup_bw.png")
+pop_up_cache = pygame.transform.scale(pop_up_cache, (width, height))
 
 
 # Draw the ground
@@ -97,7 +102,6 @@ boss.rigid_bodies.append(rigid_bodies[0])
 player.collision_listeners.extend(boss.projectiles)
 characters = [player, boss]
 
-
 ennemies = [Ennemy(screen)] * 1
 
 for ennemy in ennemies:
@@ -125,6 +129,8 @@ def look_toward_the_mouse(player):
     (m_x, m_y) = pygame.mouse.get_pos()
     player.orientation = RIGHT if player.rect.centerx < m_x else LEFT
 
+
+show_popup = False
 
 while 1:
     clock.tick(60)  # 60 FPS (frames per second)
@@ -169,51 +175,54 @@ while 1:
             player.is_attacking = False
 
     screen.blit(background, (0, 0))
-    for rigid_body in rigid_bodies:
-        rigid_body.blitme()
-    # Orient player toward the mouse
-    look_toward_the_mouse(player)
-    for ai in ais:
-        ai.update()
-    # manage characters on the screen
-    for character in (characters + ennemies):
-        if not character.spawned and character.is_active:
-            find_spawn_point_and_spawn(spawn_points=spawn_points, item=character)
-        if character.is_active:
-            character.update()
-            character.blitme()
-            for projectile in character.projectiles:
-                projectile.update()
-                projectile.blitme()
+    # High likely possible to have a popup every 10 seconds
+    show_popup = True if show_popup else rand.randint(0, 10 * 60) == 7
+    if not show_popup:
+        for rigid_body in rigid_bodies:
+            rigid_body.blitme()
+        # Orient player toward the mouse
+        look_toward_the_mouse(player)
+        for ai in ais:
+            ai.update()
+        # manage characters on the screen
+        for character in (characters + ennemies):
+            if not character.spawned and character.is_active:
+                find_spawn_point_and_spawn(spawn_points=spawn_points, item=character)
+            if character.is_active:
+                character.update()
+                character.blitme()
+                for projectile in character.projectiles:
+                    projectile.update()
+                    projectile.blitme()
 
-    ennemies_computed = False
-
-
-    def compute_ennemies():
-        for ennemy in ennemies:
-            ennemy.collision_listeners = player.projectiles
-            ennemy.update()
-            ennemy.blitme()
-            ennemies_computed = True
+        ennemies_computed = False
 
 
-    def print_pv():
-        for i in range(0, player.hp + 1):
-            x, y = pvs[i]
-            screen.blit(pv_image, (x, y))
+        def compute_ennemies():
+            for ennemy in ennemies:
+                ennemy.collision_listeners = player.projectiles
+                ennemy.update()
+                ennemy.blitme()
+                ennemies_computed = True
 
-    show_popup = rand.randint(0,10)==7
-    if show_popup:
+
+        def print_pv():
+            for i in range(0, player.hp + 1):
+                x, y = pvs[i]
+                screen.blit(pv_image, (x, y))
+
+
+        compute_ennemies()
+        print_pv()
+    else:
         press = False
-        while not press:
-            clock.tick(60)
-            screen.blit(background, (0, 0))
-            screen.blit(pygame.transform.scale(pygame.image.load(IMAGE_RESOURCES+"popup_bw.png"),(width,height)),(0,0))
-            press = 0.83*width<pygame.mouse.get_pos()[0]<width and 0<pygame.mouse.get_pos()[1]<0.18
-            screen.blit(mycursor, (pygame.mouse.get_pos()))
-            pygame.display.flip()
-    compute_ennemies()
-    print_pv()
+        screen.blit(pop_up_cache, (0, 0))
+        # Click at the right top
+        press = False if pygame.mouse.get_pressed()[0] else 0.83 * width < pygame.mouse.get_pos()[0] < width and 0 < \
+                                                            pygame.mouse.get_pos()[1] < 0.18 * height
+        if press:
+            print("pressed")
+            show_popup = False
     # q = queue.Queue()
     #
     #

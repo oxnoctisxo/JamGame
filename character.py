@@ -1,7 +1,7 @@
 import time
 
 import pygame
-
+import random  as rand
 from ais import *
 from parametters import *
 
@@ -101,6 +101,12 @@ class Character(HitBox):
 
         # Hitting
         self.hit = False
+
+    def set_active(self, val=False):
+        if not val:
+            self.set_active(False)
+            self.hit = False
+            self.jumping = False
 
     def jump(self):
         if not self.is_jumping:
@@ -306,7 +312,7 @@ class Projectile(Character):
         if self.is_active:
             if self.sender_type == ENNEMY_TYPE:
                 collision_listener.on_hit()
-            self.is_active = False
+            self.set_active(False)
 
     def set_trajectory(self):
         x_mouse, y_mouse = pygame.mouse.get_pos()
@@ -337,46 +343,27 @@ class Projectile(Character):
                     self.jumping_animation_indice = 0
 
         self.manage_jump()
-        if self.is_attacking:
-            self.attack()
-
-        self.hitbox_update()
-
 
 class Ennemy(Character):
 
     def __init__(self, screen, name="Ennmy1", is_forward=False, dimensions=CHARACTER_DIMENSIONS):
         super().__init__(screen, name, is_forward, dimensions=CHARACTER_DIMENSIONS)
-
+        self.speed_x = self.speed_x + rand.randint(-2, 2)
+        self.speed_y = self.speed_y + rand.randint(-2, 2)
+        self.initial_speed   = self.initial_speed + rand.randint(-2, 2)
 
     def ontouch(self, collision_listener):
-        if collision_listener.is_active and self.is_active :
+        if collision_listener.is_active and self.is_active:
             self.hit = True
 
 
-class Boss:
-    def __init__(self, x, y, pattern, brain):
-        self.attacks = []
-        self.pos = (x, y)
-        self.IsDead = False
-        self.pattern = pattern
-        self.brain = brain
+class Boss(Character):
 
-        def on_hit(self):
-            self.health -= 1
-            if self.health == 0:
-                isActive = False
-
-    def on_hit(self):
-        self.IsDead = True
-        self.brain.num_en -= 1
-        print("ennemi tué")
-        if self.brain.num_en <= 0:
-            self.brain.Boss()
-
-
-class Brain:
-
+    def __init__(self, screen, name="Boss", is_forward=False, dimensions=CHARACTER_DIMENSIONS):
+        super().__init__(screen, name, is_forward, dimensions=CHARACTER_DIMENSIONS)
+        self.speed_x = self.speed_x + rand.randint(-2, 2)
+        self.speed_y = self.speed_y + rand.randint(-2, 2)
+        self.initial_speed   = self.initial_speed + rand.randint(-2, 2)
     def __init__(self, boss):
         self.en_list = ["LOL", "WOW", "Spinner"]  # liste des ennemis (fauudra foutre les types)
         self.waves = [[6, 0, 0], [6, 2, 0], [8, 6, 3]]  # qtt de chaque ennemi pour chaque vague

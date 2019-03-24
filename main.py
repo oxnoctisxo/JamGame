@@ -87,6 +87,7 @@ characters = [player, Character(screen=screen, name="Paladin", is_forward=True)]
 
 ennemies = [Ennemy(screen, name="Ennmy1"), Ennemy(screen, name="Ennmy1")]
 
+
 for ennemy in ennemies:
     ennemy.is_active = True
     ennemy.rigid_bodies.extend(rigid_bodies)

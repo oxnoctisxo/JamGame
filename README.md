@@ -1,2 +1,2 @@
 # JamGame
-Game made during a Jam
+24 hours Game made during a Jam

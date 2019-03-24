@@ -17,6 +17,9 @@ def init_screen():
     Initialize the screen with width and height
     :return:
     """
+    x = 60
+    y = 60
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x, y)
     pygame.init()
 
     infoObject = pygame.display.Info()
@@ -53,11 +56,13 @@ def find_spawn_point_and_spawn(spawn_points, item):
 # Draw the ground
 def draw_ground(screen):
     rigid_bodies = []
-    positions = [(0, height)]  # (83, 712)
+    positions = [(0, height), (427, 519 + 27)]  # (83, 712)
     i = 0
     for x, y in positions:
+        dimension = (width * 2, 30) if i == 0 else (int(width / 2.55), 25) if i == 1 else RIGID_BODY_DIMENSIONS
+
         rigid_body = RigidBody(screen, x, y, filename="transparent",
-                               dimension=(width * 2, 30) if i == 0 else RIGID_BODY_DIMENSIONS)
+                               dimension=dimension)
         screen.blit(rigid_body.image, (x, y))
         rigid_bodies.append(rigid_body)
         i += 1
@@ -85,7 +90,8 @@ background = pygame.image.load(IMAGE_RESOURCES + 'background.png')
 background = pygame.transform.scale(background, (width, height))
 characters = [player, Character(screen=screen, name="Paladin", is_forward=False)]
 
-ennemies = [Boss(screen, player)]
+boss = Boss(screen, player)
+ennemies = [Ennemy(screen)] * 10
 
 for ennemy in ennemies:
     ennemy.is_active = True
@@ -97,6 +103,7 @@ spawn_points = [Spawn(screen, 20, 20, orientation=LEFT, type=PLAYER_TYPE), Spawn
 # AI management
 ais = []
 ais.append(EnnemyBehavior(ennemies))
+ais.append(EnemyAIBoss(boss))
 
 # Non owned Projectiles management ( could be particles )
 projectiles = []
@@ -150,6 +157,7 @@ while 1:
         # Allow attacking anytime
         if pygame.mouse.get_pressed()[0] and not player.is_attacking:
             player.is_attacking = True
+            print("Mouse: ", pygame.mouse.get_pos())
         if not pygame.mouse.get_pressed()[0] and player.is_attacking:
             player.is_attacking = False
 

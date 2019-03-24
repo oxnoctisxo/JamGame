@@ -59,6 +59,8 @@ class HitBox(pygame.sprite.Sprite):
             if collision_listener.is_active and self.is_active:
                 if self.touched(collision_listener):
                     self.ontouch(collision_listener)
+                    collision_listener.ontouch(self)
+        self.clean_collision_listeners()
 
     def clean_collision_listeners(self):
         cmpt = len(self.collision_listeners) - 1
@@ -246,7 +248,8 @@ class Character(HitBox):
             if self.moving_horizontally:
                 self.orientation = self.direction[0] if self.speed_x > 0 else self.direction[
                     1] if self.speed_x < 0 else self.orientation
-                self.rect.centerx += self.campled_movement(self.speed_x, isX=True)
+                real_offset = self.campled_movement(self.speed_x, isX=True)
+                self.rect.centerx += real_offset
 
         if self.rect.top > 0 or self.rect.bottom <= self.screen_rect.bottom:
             if self.moving_vertically:
@@ -345,15 +348,16 @@ class Projectile(Character):
     def __init__(self, screen, source=pygame.mouse, name="Projectile", is_forward=False,
                  dimensions=PROJECTILE_DIMENSIONS,
                  origin=ENNEMY_TYPE):
-        super().__init__(screen, name, False, dimensions)
+        super().__init__(screen, name, is_forward=is_forward, dimensions=dimensions)
         self.sender_type = origin
         self.source = source
 
     def ontouch(self, collision_listener):
         print("Collision listener on touch")
-        if self.is_active:
-            collision_listener.onHit()
-            self.set_active(False)
+
+    # if self.is_active:
+    # collision_listener.onHit()
+    # self.set_active(False)
 
     def set_trajectory(self):
         x_mouse, y_mouse = self.source.get_pos()
@@ -390,8 +394,8 @@ class Ennemy(Character):
 
     def __init__(self, screen, name="Ennmy1", is_forward=False, dimensions=CHARACTER_DIMENSIONS):
         super().__init__(screen, name, is_forward, dimensions)
-        self.speed_x = self.speed_x + rand.randint(-2, 2)
-        self.speed_y = self.speed_y + rand.randint(-2, 2)
+        self.speed_x = self.speed_x + rand.randint(-1, 1)
+        self.speed_y = self.speed_y + rand.randint(-1, 1)
         self.initial_speed = self.initial_speed + rand.randint(-2, 2)
 
     def ontouch(self, collision_listener):
@@ -403,8 +407,8 @@ class Boss(Character):
 
     def __init__(self, screen, player=None, projectiles=[], name="Boss", is_forward=False, dimensions=BOSS_DIMENSION):
         super().__init__(screen, name, is_forward, dimensions)
-        self.speed_x = self.speed_x + rand.randint(-2, 2)
-        self.speed_y = self.speed_y + rand.randint(-2, 2)
+        self.speed_x = self.speed_x + rand.randint(-1, 1)
+        self.speed_y = self.speed_y + rand.randint(-1, 1)
         self.initial_speed = self.initial_speed + rand.randint(-2, 2)
         self.player = player
         self.projectiles = projectiles

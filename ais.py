@@ -1,3 +1,5 @@
+from numpy import *
+
 from parametters import *
 
 
@@ -65,25 +67,38 @@ class EnnemyBehavior:
 
 
 class EnemyAIBoss:
-    def __init__(self, character, routine_list, health):
+    def __init__(self, character):
         self.character = character
-        self.routine_func = routine_list
+        x = linspace(0, 4 * pi, 20000)
+        y = []
+        for i in range(0, 80):
+            y.append((cos(x[(i + 1) * 125]) - cos(x[i * 125]), sin(x[125 * (i + 1)]) - sin(x[125 * i])))
+        moving_circle = []
+        for i in range(len(y)):
+            tuuple = [0, 0, 0, 0]
+            if y[i][1] <= 0:
+                tuuple[3] = abs(y[i][1])
+            else:
+                tuuple[2] = y[i][1]
+            if y[i][0] <= 0:
+                tuuple[0] = abs(y[i][0])
+            else:
+                tuuple[1] = y[i][0]
+            moving_circle.append(tuuple)
+        self.routine_func = moving_circle
         self.i = 0
-        self.health = health
 
     def update(self):
         if self.i > len(self.routine_func) - 1:
-            i = 0
-        self.character.move_up(self.routine_func[i][2])
-        self.character.move_down(self.routine_func[i][3])
-        self.character.move_left(self.routine_func[i][0])
-        self.character.move_right(self.routine_func[i][1])
-        i += 1
+            self.i = 0
+
+        self.character.move_up(self.routine_func[self.i][2])
+        self.character.move_down(self.routine_func[self.i][3])
+        self.character.move_left(self.routine_func[self.i][0])
+        self.character.move_right(self.routine_func[self.i][1])
+        self.i += 1
         if self.character.hit:
-            self.health -= 1
-            self.character.hit = False
-        if self.health == 0:
-            self.character.isActive = False
-        if i == 90:
-            character.attack()
-            i = 0
+            self.character.hp -= 1
+            if self.character.hp <= 0:
+                self.character.set_active(False)
+        self.character.attack()

@@ -37,7 +37,11 @@ def init_screen():
 
     pygame.display.set_caption('Clickb8')
     play_normal_sound()
-    return (screen, width, height)
+    pv_image = pygame.image.load(IMAGE_RESOURCES + 'onglet_bw.png')
+    pv_image = pygame.transform.scale(pv_image, ONGLET_DIMENSION)
+    inital_pv_x, inital_pv_y = 30, 20
+    pvs = [(inital_pv_x + (ONGLET_DIMENSION[0] * i), inital_pv_y) for i in range(0, PLAYER_HP + 1)]
+    return (screen, width, height, pv_image, pvs)
 
 
 def find_spawn_point_and_spawn(spawn_points, item):
@@ -56,7 +60,7 @@ def find_spawn_point_and_spawn(spawn_points, item):
     return False
 
 
-(screen, width, height) = init_screen()
+(screen, width, height, pv_image, pvs) = init_screen()
 
 
 # Draw the ground
@@ -128,9 +132,9 @@ def look_toward_the_mouse(player):
     (m_x, m_y) = pygame.mouse.get_pos()
     player.orientation = RIGHT if player.rect.centerx < m_x else LEFT
 
+
 i = 0
 while 1:
-    i+=1
     clock.tick(60)  # 60 FPS (frames per second)
 
     for event in pygame.event.get():
@@ -180,8 +184,6 @@ while 1:
     for ai in ais:
         ai.update()
     # manage characters on the screen
-    if i ==80:
-        character.append(Ennemy
     for character in (characters + ennemies):
         if not character.spawned and character.is_active:
             find_spawn_point_and_spawn(spawn_points=spawn_points, item=character)
@@ -203,8 +205,14 @@ while 1:
             ennemies_computed = True
 
 
-    compute_ennemies()
+    def print_pv():
+        for i in range(0, player.hp + 1):
+            x, y = pvs[i]
+            screen.blit(pv_image, (x, y))
 
+
+    compute_ennemies()
+    print_pv()
     # q = queue.Queue()
     #
     #

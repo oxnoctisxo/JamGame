@@ -126,7 +126,7 @@ class Character(HitBox):
         self.hit = False
 
         # RPG side
-        self.hp = 10
+        self.hp = PLAYER_HP
 
     def get_pos(self):
         return self.rect.centerx, self.rect.centery
@@ -354,6 +354,7 @@ class Projectile(Character):
                  origin=ENNEMY_TYPE):
         super().__init__(screen, name, is_forward=is_forward, dimensions=dimensions)
         self.sender_type = origin
+        self.type = origin
         self.source = source
         self.spin_direction = 0
 
@@ -419,6 +420,7 @@ class Ennemy(Character):
         self.speed_x = self.speed_x + rand.randint(-1, 1)
         self.speed_y = self.speed_y + rand.randint(-1, 1)
         self.initial_speed = self.initial_speed + rand.randint(-2, 2)
+        self.hp = MOB_HP
 
     def ontouch(self, collision_listener):
         if collision_listener.is_active and self.is_active and collision_listener.type != self.type:

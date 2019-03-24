@@ -41,13 +41,13 @@ class HitBox(pygame.sprite.Sprite):
         """
 
         intersection = self.rect.clip(other_hitbox.rect)
-        return intersection.width != 0 or intersection.height != 0
+        return self.is_active and other_hitbox.is_active and (intersection.width != 0 or intersection.height != 0)
         # return
         #   pygame.sprite.collide_rect(self, other_hitbox) if self.is_rect else pygame.sprite.collide_circle(self,
         #                                                                                                   other_hitbox)
 
     def ontouch(self, collision_listener):
-        if self.is_active and collision_listener.type != self.type:
+        if self.is_active and collision_listener.is_active and collision_listener.type != self.type:
             self.hit = True
             collision_listener.hit = True
             if VERBOSE:
@@ -93,6 +93,7 @@ class Character(HitBox):
         self.is_forward = is_forward
         self.image = get_image_for(name=name, dimensions=dimensions, is_forward=is_forward)
         self.name = name
+        self.is_boss = False
         self.rect = self.image.get_rect()
         super().__init__(self.rect)
         self.screen_rect = screen.get_rect()
@@ -147,6 +148,8 @@ class Character(HitBox):
             self.is_active = False
             self.hit = False
             self.jumping = False
+        else:
+            self.is_active = True
 
     def jump(self):
         if not self.is_jumping:
@@ -209,15 +212,6 @@ class Character(HitBox):
                 self.last_shoot = current_time
                 self.attacking_sound()
         self.clean_projectiles()
-        #
-        # animation_rect = self.animation.get_rect()
-        # animation_rect.bottom = self.rect.bottom
-        #
-        # animation_rect.centerx = self.rect.centerx
-        #
-        # animation_rect.centerx += self.speed_x
-        #
-        # self.animation_rect = animation_rect
 
     def campled_movement(self, offset, isX=True):
         """
@@ -303,22 +297,25 @@ class RigidBody(Character):
         self.type = RIGID_BODY
 
     def update(self):
+        if not self.is_active:
+            return
         # Checks all the collisions
         for collision_listener in self.collision_listeners:
             if collision_listener.is_active:
                 if self.touched(collision_listener):
-                    self.ontouch()
+                    self.ontouch(collision_listener)
 
 
 class Spawn(pygame.sprite.Sprite):
 
-    def __init__(self, screen, x, y, orientation=RIGHT, mask=None, type=ENNEMY_TYPE):
+    def __init__(self, screen, x, y, orientation=RIGHT, mask=None, type=ENNEMY_TYPE, is_for_boss=False):
         super().__init__()
 
         self.screen = screen
         self.x = x
         self.y = y
         self.mask = mask
+        self.is_for_boss = is_for_boss
         self.image = pygame.image.load("resources/images/spawn.png")
         self.rect = self.image.get_rect()
         self.type = type
@@ -326,6 +323,7 @@ class Spawn(pygame.sprite.Sprite):
         # Start the character at the bottom center of the screen.
         self.rect.centerx = x
         self.rect.centery = y
+        self.is_active = False
 
     def spawn(self, item):
         """
@@ -344,19 +342,14 @@ class Spawn(pygame.sprite.Sprite):
         """
         Tells if an item is allowed to spawn somewhere
         TODO : Use byte masks ( since they can be added etc... ) instead of constants
-        :param item:
-        :return:
         """
-        return self.type == item.type
+        return self.type == item.type or (self.is_for_boss and item.is_boss)
 
     def orient(self, image, rect, orientation=RIGHT):
         self.screen.blit(image, rect)
 
     def blitme(self):
         self.orient(self.image, self.rect, RIGHT)
-
-    def onHit(self):
-        pass
 
 
 class Projectile(Character):
@@ -446,6 +439,10 @@ class Hero(Character):
     def __init__(self, screen, name="Paladin", is_forward=False, dimensions=CHARACTER_DIMENSIONS):
         super().__init__(screen, name, is_forward, dimensions)
         self.type = PLAYER_TYPE
+        self.hp = PLAYER_HP
+        self.speed_x = self.speed_x + rand.randint(-1, 1)
+        self.speed_y = self.speed_y + rand.randint(-1, 1)
+        self.trajectory = None
 
     def ontouch(self, collision_listener):
         if self.is_active and collision_listener.is_active and self.type != collision_listener.type:
@@ -466,6 +463,7 @@ class Boss(Character):
         self.play_boss_sound()
         self.type = ENNEMY_TYPE
         self.shotting_wait = 1
+        self.is_boss = True
         self.rect.centerx, self.rect.centery = (758, 325)
 
     def play_normal_sound(self):
@@ -513,6 +511,4 @@ class Boss(Character):
             self.projectiles.append(p)
             self.last_shoot = current_time
 
-
 ### PopUp
-

@@ -10,7 +10,7 @@ class ProjectileBehavior:
 
     def update(self):
         for projectile in self.projectiles:
-            if projectile.is_active:
+            if projectile.is_active and projectile.trajectory != None:
                 if projectile.trajectory[0] > 0 or (projectile.trajectory[0] == 0 and projectile.orientation == RIGHT):
                     projectile.move_right(multiplier=projectile.trajectory[0] * PROJECTILE_SPEED)
                 else:
@@ -26,6 +26,7 @@ class ProjectileBehavior:
                     projectile.set_active(False)
 
             if projectile.hit == True:
+                print("Projectile not active")
                 projectile.set_active(False)
         self.clean()
 
@@ -97,7 +98,7 @@ class EnemyAIBoss:
         if self.i > len(self.routine_func) - 1:
             self.i = 0
         current_time = time.time()
-        if not self.character.is_active and current_time - self.last_death < BOSS_TIMER:
+        if not self.character.is_active and abs(current_time - self.last_death) > BOSS_TIMER:
             print("Resurrected")
             self.character.set_active(True)
 

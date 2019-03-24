@@ -1,12 +1,12 @@
-import os
-
 from character import *
 from my_utils import *
+import os
 
 
 def play_normal_sound():
     pygame.mixer.music.load(SOUND_RESOURCES + 'idle.ogg')
     pygame.mixer.music.play(-1)
+
 
 def play_popup_sound():
     print("PopUp sound")
@@ -14,12 +14,14 @@ def play_popup_sound():
     pygame.mixer.Channel(POPUP_CHANNEL).play(popup_sound)
     pass
 
+
 def init_screen():
     """
     Initialize the screen with width and height
     :return:
     """
-    os.name
+    if VERBOSE:
+        print("os.name = ", os.name)
     x = 60
     y = 60
     os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x, y)
@@ -31,11 +33,11 @@ def init_screen():
     height = int(infoObject.current_h * SCREEN_RATIO)
     screen = pygame.display.set_mode((width, height))
     if VERBOSE:
-        print("width =" + str(width))
+        print("width = " + str(width) + " Ratio = " + str(SCREEN_RATIO))
     if VERBOSE:
-        print("height  =" + str(height))
+        print("height = " + str(height))
 
-    pygame.display.set_caption('Clickb8')
+    pygame.display.set_caption('*** Clickb8 ***')
     pv_image = pygame.image.load(IMAGE_RESOURCES + 'onglet_bw.png')
     pv_image = pygame.transform.scale(pv_image, ONGLET_DIMENSION)
     inital_pv_x, inital_pv_y = 30, 20
@@ -84,7 +86,7 @@ def draw_ground(screen):
 clock = pygame.time.Clock()
 ground_lvl = height - 100
 
-player = Character(screen=screen, name="Paladin", is_forward=False)
+player = Hero(screen=screen, name="Paladin", is_forward=False)
 player.is_active = True
 player.type = PLAYER_TYPE
 
@@ -104,7 +106,9 @@ background = pygame.transform.scale(background, (width, height))
 boss = Boss(screen, player)
 boss.set_active(True)
 boss.rigid_bodies.append(rigid_bodies[0])
-player.collision_listeners.extend(boss.projectiles)
+# Subscribe Boss and Player to each other's projectiles
+player.collision_listeners = boss.projectiles
+boss.collision_listeners  = player.projectiles
 characters = [player, boss]
 
 ennemies = [Ennemy(screen)] * 1
@@ -114,7 +118,10 @@ for ennemy in ennemies:
     ennemy.rigid_bodies.extend(rigid_bodies)
     ennemy.jump()
 
-spawn_points = [Spawn(screen, 20, 20, orientation=LEFT, type=PLAYER_TYPE), Spawn(screen, 100, 100, orientation=RIGHT, type=ENNEMY_TYPE)]
+spawn_points = [Spawn(screen, width / 2, height / 2, orientation=LEFT, type=PLAYER_TYPE)
+    , Spawn(screen, 0, 0, orientation=RIGHT, type=ENNEMY_TYPE)
+    , Spawn(screen, 0, 0, orientation=RIGHT, type=ENNEMY_TYPE, is_for_boss=True)
+                ]
 
 # AI management
 ais = []
@@ -183,7 +190,7 @@ while 1:
     # High likely possible to have a popup every 10 seconds
     before = show_popup
     show_popup = True if show_popup else rand.randint(0, 40 * 60) == 7
-    #If it popped up
+    # If it popped up
     if before == False and show_popup == True:
         play_popup_sound()
     if not show_popup:
@@ -209,7 +216,7 @@ while 1:
 
         def compute_ennemies():
             for ennemy in ennemies:
-                ennemy.collision_listeners = player.projectiles + player
+                ennemy.collision_listeners = player.projectiles
                 ennemy.update()
                 ennemy.blitme()
                 ennemies_computed = True

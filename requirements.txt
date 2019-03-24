@@ -1,0 +1,6 @@
+PACKAGES NEEDED :
+* pygame
+* io
+* time
+* random
+* numpy

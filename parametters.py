@@ -5,8 +5,13 @@ LEFT = "Left"
 UP = "Up"
 DOWN = "Down"
 
+# channel 0 is used for main music in a unlimited loop
+ATTACK_CHANNEL = 1
 ATTACK_SOUND = 'Shoot_01.ogg'
+SPINNER_CHANNEL = 2
 SPINNER_SOUND = 'Spinner_01.ogg'
+POPUP_CHANNEL = 3
+POPUP_SOUND = 'popup_3times.ogg'
 
 PLAYER_HP = 10
 MOB_HP = 1

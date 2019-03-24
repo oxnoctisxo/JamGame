@@ -22,7 +22,11 @@ class ProjectileBehavior:
                     projectile.move_down(multiplier=projectile.trajectory[1] * PROJECTILE_SPEED)
 
                 if not projectile.can_move_left() or not projectile.can_move_right():
+                    print("Projectile inactive")
                     projectile.set_active(False)
+
+            if projectile.hit == True:
+                projectile.set_active(False)
         self.clean()
 
     def clean(self):
@@ -54,8 +58,7 @@ class EnnemyBehavior:
                 if character.hit:
                     character.hp -= 1
                     character.hit = False
-                    if character.hp <= 0:
-                        character.set_active(False)
+                    character.set_active(False)
         self.clean()
 
     def clean(self):

@@ -1,5 +1,4 @@
 import random  as rand
-import time
 
 import pygame
 
@@ -7,17 +6,20 @@ from ais import *
 from parametters import *
 
 images_cache = {}
-def get_image_for(name,dimensions, is_forward=False):
-    if (name + ("bw" if not is_forward else "fw")) not in images_cache :
+
+
+def get_image_for(name, dimensions, is_forward=False):
+    if (name + ("bw" if not is_forward else "fw")) not in images_cache:
         image = pygame.image.load(
             IMAGE_RESOURCES + name.lower() + "_" + ("bw" if not is_forward else "fw") + ".png")
         image = pygame.transform.scale(image, dimensions)
         if not is_forward:
-            image= pygame.transform.flip(image, True, False)
+            image = pygame.transform.flip(image, True, False)
         images_cache[name + ("bw" if not is_forward else "fw")] = image
         return image
     else:
         return images_cache[name + ("bw" if not is_forward else "fw")]
+
 
 class HitBox(pygame.sprite.Sprite):
 
@@ -47,6 +49,7 @@ class HitBox(pygame.sprite.Sprite):
     def ontouch(self, collision_listener):
         if self.is_active and collision_listener.type != self.type:
             self.hit = True
+            collision_listener.hit = True
             if VERBOSE:
                 print("Object touched")
 
@@ -88,7 +91,7 @@ class Character(HitBox):
     def __init__(self, screen, name="Paladin", is_forward=False, dimensions=CHARACTER_DIMENSIONS):
         self.screen = screen
         self.is_forward = is_forward
-        self.image = get_image_for(name=name,dimensions=dimensions,is_forward=is_forward)
+        self.image = get_image_for(name=name, dimensions=dimensions, is_forward=is_forward)
         self.name = name
         self.rect = self.image.get_rect()
         super().__init__(self.rect)
@@ -134,7 +137,7 @@ class Character(HitBox):
 
         # RPG side
         self.hp = PLAYER_HP
-        self.attacking_sound_i =pygame.mixer.Sound(SOUND_RESOURCES + ATTACK_SOUND)
+        self.attacking_sound_i = pygame.mixer.Sound(SOUND_RESOURCES + ATTACK_SOUND)
 
     def get_pos(self):
         return self.rect.centerx, self.rect.centery
@@ -190,7 +193,7 @@ class Character(HitBox):
                 self.projectiles.pop(cmpt)
 
     def attacking_sound(self):
-        pygame.mixer.Channel(1).play(self.attacking_sound_i)
+        pygame.mixer.Channel(ATTACK_CHANNEL).play(self.attacking_sound_i)
 
     def attack(self):
         if self.type == PLAYER_TYPE:
@@ -321,8 +324,8 @@ class Spawn(pygame.sprite.Sprite):
         self.type = type
         self.screen_rect = screen.get_rect()
         # Start the character at the bottom center of the screen.
-        self.rect.centerx = 0 + width / 2
-        self.rect.bottom = self.screen_rect.bottom - int(ground_width * 89 / 100)
+        self.rect.centerx = x
+        self.rect.centery = y
 
     def spawn(self, item):
         """
@@ -406,7 +409,7 @@ class Projectile(Character):
 
         self.manage_jump()
         if self.name.lower() == "spinner":
-            pygame.mixer.Channel(2).play(self.spinner_sound)
+            pygame.mixer.Channel(SPINNER_CHANNEL).play(self.spinner_sound)
 
     def orient(self, image, rect, orientation=RIGHT):
         if self.spin_direction == 0:
@@ -513,14 +516,3 @@ class Boss(Character):
 
 ### PopUp
 
-class PopUp(Character):
-
-    def __init__(self, screen, name="PopUp", is_forward=False, dimensions=POPUP_DIMENSIONS):
-        super().__init__(screen, name, is_forward, dimensions=POPUP_DIMENSIONS)
-
-    def get_hit_box(self):
-        """
-        Return a rect containing
-        :return:
-        """
-        pass

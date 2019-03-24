@@ -8,6 +8,11 @@ def play_normal_sound():
     pygame.mixer.music.load(SOUND_RESOURCES + 'idle.ogg')
     pygame.mixer.music.play(-1)
 
+def play_popup_sound():
+    print("PopUp sound")
+    popup_sound = pygame.mixer.Sound(SOUND_RESOURCES + POPUP_SOUND)
+    pygame.mixer.Channel(POPUP_CHANNEL).play(popup_sound)
+    pass
 
 def init_screen():
     """
@@ -109,7 +114,7 @@ for ennemy in ennemies:
     ennemy.rigid_bodies.extend(rigid_bodies)
     ennemy.jump()
 
-spawn_points = [Spawn(screen, 20, 20, orientation=LEFT, type=PLAYER_TYPE), Spawn(screen, 100, 100, orientation=RIGHT)]
+spawn_points = [Spawn(screen, 20, 20, orientation=LEFT, type=PLAYER_TYPE), Spawn(screen, 100, 100, orientation=RIGHT, type=ENNEMY_TYPE)]
 
 # AI management
 ais = []
@@ -176,7 +181,11 @@ while 1:
 
     screen.blit(background, (0, 0))
     # High likely possible to have a popup every 10 seconds
-    show_popup = True if show_popup else rand.randint(0, 10 * 60) == 7
+    before = show_popup
+    show_popup = True if show_popup else rand.randint(0, 40 * 60) == 7
+    #If it popped up
+    if before == False and show_popup == True:
+        play_popup_sound()
     if not show_popup:
         for rigid_body in rigid_bodies:
             rigid_body.blitme()
@@ -200,7 +209,7 @@ while 1:
 
         def compute_ennemies():
             for ennemy in ennemies:
-                ennemy.collision_listeners = player.projectiles
+                ennemy.collision_listeners = player.projectiles + player
                 ennemy.update()
                 ennemy.blitme()
                 ennemies_computed = True

@@ -66,14 +66,12 @@ class Character(HitBox):
         # Speed of the character
         self.speedx = 6
         self.speedy = 6
-        self.min_speed = self.speed
-        self.center = float(self.speed)
+        self.initial_speed = self.speedx
+        self.center = float(self.speedx)
 
         # Set a variable for each movement.
-        self.moving_right = False
-        self.moving_left = False
-        self.moving_up = False
-        self.moving_down = False
+        self.moving_horizontally = False
+        self.moving_vertically = False
         self.is_attacking = False
 
         self.direction = [RIGHT, LEFT]  # if is_forward else [LEFT, RIGHT]
@@ -85,8 +83,8 @@ class Character(HitBox):
         # Jumping animation
 
         self.jumping_animation = []
-        self.jumping_animation.extend([self.move_up] * 40)
-        self.jumping_animation.extend([self.move_down] * 40)
+        self.jumping_animation.extend([self.move_up] * 25)
+        self.jumping_animation.extend([self.move_down] * 25)
         self.jumping_animation_indice = 0
         self.is_jumping = False
 
@@ -97,27 +95,29 @@ class Character(HitBox):
 
     def manage_jump(self):
         if self.jumping_animation_indice < len(self.jumping_animation) and self.is_jumping:
-            self.jumping_animation[self.jumping_animation_indice]()
+            self.jumping_animation[self.jumping_animation_indice](multiplier=2)
             self.jumping_animation_indice = self.jumping_animation_indice + 1
             if VERBOSE:
-                print("Jumping",self.jumping_animation_indice)
+                print("Jumping", self.jumping_animation_indice)
         else:
             self.is_jumping = False
             self.jumping_animation_indice = 0
 
-    def move_up(self, val=True):
-        self.moving_up = val
-        self.speed = -abs(self.speed)
+    def move_up(self, val=True, multiplier=1):
+        self.moving_vertically = val
+        self.speedy = -abs(self.initial_speed * multiplier)
 
-    def move_down(self, val=True):
-        self.moving_up = val
-        self.speed = abs(self.speed)
+    def move_down(self, val=True, multiplier=1):
+        self.moving_vertically = val
+        self.speedy = abs(self.initial_speed * multiplier)
 
-    def move_left(self, val=True):
-        self.moving_left = val
+    def move_right(self, val=True, multiplier=1):
+        self.moving_horizontally = val
+        self.speedx = abs(self.initial_speed * multiplier)
 
-    def move_right(self, val=True):
-        self.moving_right = val
+    def move_left(self, val=True, multiplier=1):
+        self.moving_horizontally = val
+        self.speedx = -abs(self.initial_speed * multiplier)
 
     def __str__(self):
         return str(self.name)
@@ -128,10 +128,7 @@ class Character(HitBox):
 
         animation_rect.centerx = self.rect.centerx
 
-        if self.orientation == RIGHT:
-            animation_rect.centerx += self.speed
-        elif self.orientation == LEFT:
-            animation_rect.centerx -= self.speed
+        animation_rect.centerx += self.speedx
 
         self.animation_rect = animation_rect
 
@@ -158,31 +155,28 @@ class Character(HitBox):
                 sol += -1 if offset > 0 else 1
         return sol
 
+    def can_move_right(self):
+        return self.rect.right <= self.screen_rect.right
+
+    def can_move_left(self):
+        return self.rect.left > 0
+
     def update(self):
         if not self.is_active:
             return
-        if self.rect.right <= self.screen_rect.right:
-            if self.moving_right:
-                self.orientation = self.direction[0]
-                self.rect.centerx += self.campled_movement(self.speed, isX=True)
+        if self.can_move_right() and self.can_move_left():
+            if self.moving_horizontally:
+                self.orientation = self.direction[0] if self.speedx >= 0 else self.direction[1]
+                self.rect.centerx += self.campled_movement(self.speedx, isX=True)
 
-        if self.rect.left > 0:
-            if self.moving_left:
-                self.orientation = self.direction[1]
-                self.rect.centerx += self.campled_movement(-self.speed, isX=True)
-
-        if self.rect.top > 0:
-            if self.moving_up:
-                self.rect.bottom += self.campled_movement(-self.speed, isX=False)
-
-        if self.rect.bottom <= self.screen_rect.bottom:
-            if self.moving_down:
-                real_offset = self.campled_movement(self.speed, isX=False)
+        if self.rect.top > 0 and self.rect.bottom <= self.screen_rect.bottom:
+            if self.moving_vertically:
+                real_offset = self.campled_movement(self.speedy, isX=False)
                 self.rect.bottom += real_offset
                 # If we did hit the ground
-                # if real_offset != self.speed:
-                #    self.jumping = False
-                #    self.jumping_animation_indice = 0
+                if real_offset != self.speedy:
+                    self.jumping = False
+                    self.jumping_animation_indice = 0
 
         self.manage_jump()
         if self.is_attacking:
@@ -270,4 +264,13 @@ class EnnemyAI1:
         self.characters = characters
 
     def update(self):
-        pass
+        for character in self.characters:
+            if character.orientation == RIGHT and not character.can_move_right():
+                character.orientation = LEFT
+            if character.orientation == LEFT and not character.can_move_left():
+                character.orientation = RIGHT
+
+            if character.orientation == RIGHT:
+                character.move_right()
+            else:
+                character.move_left()

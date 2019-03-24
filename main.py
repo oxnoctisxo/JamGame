@@ -46,7 +46,7 @@ def find_spawn_point_and_spawn(spawn_points, item):
 # Draw the ground
 def draw_ground(screen):
     rigid_bodies = []
-    positions = [(0, height), (83, 712)]
+    positions = [(0, height)]  # (83, 712)
     i = 0
     for x, y in positions:
         rigid_body = RigidBody(screen, x, y, filename="transparent",
@@ -83,6 +83,9 @@ ennemies = [Character(screen, name="Ennmy1")]
 spawn_points = [Spawn(screen, 20, 20, orientation=LEFT, type=PLAYER_TYPE), Spawn(screen, 100, 100, orientation=RIGHT)]
 rigid_bodies = draw_ground(screen)
 player.rigid_bodies.extend(rigid_bodies)
+
+ais = []
+ais.append(EnnemyAI1(ennemies))
 
 characters[1].add_collision_listenr(player)
 # Add colistion detection
@@ -123,9 +126,9 @@ while 1:
                 player.move_right(False)
             elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                 player.move_left(False)
-            elif event.key == pygame.K_UP or event.key == pygame.K_w:
-                ##player.move_up(False)
-                print("not jumping")
+            ##elif event.key == pygame.K_UP or event.key == pygame.K_w:
+            ##player.move_up(False)
+            # print("not jumping")
             elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                 if not player.is_jumping:
                     player.move_down(False)

@@ -103,7 +103,6 @@ class Character(HitBox):
 
         self.direction = [RIGHT, LEFT]  # if is_forward else [LEFT, RIGHT]
         self.orientation = self.direction[0]
-        self.animation = pygame.image.load("resources/images/slash.png")
         self.rigid_bodies = []
         self.type = ENNEMY_TYPE
 
@@ -127,6 +126,7 @@ class Character(HitBox):
 
         # RPG side
         self.hp = PLAYER_HP
+        self.attacking_sound_i =pygame.mixer.Sound(SOUND_RESOURCES + ATTACK_SOUND)
 
     def get_pos(self):
         return self.rect.centerx, self.rect.centery
@@ -182,7 +182,7 @@ class Character(HitBox):
                 self.projectiles.pop(cmpt)
 
     def attacking_sound(self):
-        pygame.mixer.Channel(1).play(pygame.mixer.Sound(SOUND_RESOURCES + ATTACK_SOUND))
+        pygame.mixer.Channel(1).play(self.attacking_sound_i)
 
     def attack(self):
         if self.type == PLAYER_TYPE:
@@ -357,6 +357,7 @@ class Projectile(Character):
         self.type = origin
         self.source = source
         self.spin_direction = 0
+        self.spinner_sound = pygame.mixer.Sound(SOUND_RESOURCES + SPINNER_SOUND)
 
     def ontouch(self, collision_listener):
         if VERBOSE:
@@ -397,7 +398,7 @@ class Projectile(Character):
 
         self.manage_jump()
         if self.name.lower() == "spinner":
-            pygame.mixer.Channel(1).play(pygame.mixer.Sound(SOUND_RESOURCES + SPINNER_SOUND))
+            pygame.mixer.Channel(1).play(self.spinner_sound)
 
     def orient(self, image, rect, orientation=RIGHT):
         if self.spin_direction == 0:
@@ -475,6 +476,7 @@ class Boss(Character):
         :return:
         """
         if not val:
+            print("Boss Died")
             self.is_active = False
             self.hit = False
             self.jumping = False

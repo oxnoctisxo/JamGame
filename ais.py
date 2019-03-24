@@ -1,5 +1,5 @@
 from numpy import *
-
+import time
 from parametters import *
 
 
@@ -88,14 +88,13 @@ class EnemyAIBoss:
             moving_circle.append(tuuple)
         self.routine_func = moving_circle
         self.i = 0
-        self.j = 600
+        self.last_death = time.time()
 
     def update(self):
         if self.i > len(self.routine_func) - 1:
             self.i = 0
-        if self.j < BOSS_TIMER:
-            self.j += 1
-        if self.j == BOSS_TIMER:
+        current_time = time.time()
+        if not self.character.is_active and current_time - self.last_death < BOSS_TIMER:
             self.character.set_active(True)
 
 
@@ -105,10 +104,11 @@ class EnemyAIBoss:
         self.character.move_right(self.routine_func[self.i][1])
         self.i += 1
         if self.character.hit:
+            print("Boss touched",self.character.hp)
             self.character.hit = False
             self.character.hp -= 1
             if self.character.hp <= 0:
                 self.character.set_active(False)
-                self.j = 0
+                self.last_death  = current_time
                 self.i = 0
         self.character.attack()

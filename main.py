@@ -52,6 +52,7 @@ def find_spawn_point_and_spawn(spawn_points, item):
     return False
 
 
+
 (screen, width, height, pv_image, pvs) = init_screen()
 
 

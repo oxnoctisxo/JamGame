@@ -2,15 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d877cad8-6991-4df2-bb78-22ad30afd938" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3 1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/69A634DE-835F-4276-8F40-26F581324A84.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EBD3C2BE-8FC8-41EA-BFB6-FCD7C9089A5C 1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EBD3C2BE-8FC8-41EA-BFB6-FCD7C9089A5C.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.floo" beforeDir="false" afterPath="$PROJECT_DIR$/.floo" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cercle.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/images/arrow_fw.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ais.py" beforeDir="false" afterPath="$PROJECT_DIR$/ais.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/character.py" beforeDir="false" afterPath="$PROJECT_DIR$/character.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parametters.py" beforeDir="false" afterPath="$PROJECT_DIR$/parametters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/images/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3 1.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/images/boss_bw.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/images/69A634DE-835F-4276-8F40-26F581324A84.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/images/B16AFEBF-A0C1-4D7F-89AF-B4264B627AC5.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/images/paladin_bw.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/images/EBD3C2BE-8FC8-41EA-BFB6-FCD7C9089A5C 1.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/images/popup_bw.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/images/background.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/images/background.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/images/paladin_fw.png" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,17 +24,17 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/JamGame$pygame08MouseCursor.coverage" NAME="pygame08MouseCursor Coverage Results" MODIFIED="1553370413828" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/resources/test_script" />
-    <SUITE FILE_PATH="coverage/JamGame$main.coverage" NAME="main Coverage Results" MODIFIED="1553410674396" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/JamGame$main.coverage" NAME="main Coverage Results" MODIFIED="1553416494973" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/character.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="82">
-              <caret line="102" column="24" lean-forward="true" selection-start-line="102" selection-start-column="24" selection-end-line="102" selection-end-column="24" />
+            <state relative-caret-position="152">
+              <caret line="62" column="40" lean-forward="true" selection-start-line="62" selection-start-column="40" selection-end-line="62" selection-end-column="40" />
               <folding>
-                <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#0#22#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -39,8 +43,22 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ais.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="54" column="20" lean-forward="true" selection-start-line="54" selection-start-column="20" selection-end-line="54" selection-end-column="20" />
+            <state relative-caret-position="169">
+              <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="32" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/images/arrow_fw.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/parametters.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="338">
+              <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
             </state>
           </provider>
         </entry>
@@ -48,45 +66,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="87" column="73" selection-start-line="87" selection-start-column="73" selection-end-line="87" selection-end-column="73" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/parametters.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/images/ennmy1_bw.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/images/paladin_fw.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.PyCharm2018.3/system/python_stubs/-661281585/builtins.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12864">
-              <caret line="804" column="8" selection-start-line="804" selection-start-column="8" selection-end-line="804" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/.PyCharm2018.3/system/python_stubs/-661281585/pygame/mouse.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="23" selection-end-column="4" />
+            <state relative-caret-position="171">
+              <caret line="178" column="33" selection-start-line="178" selection-start-column="33" selection-end-line="178" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -102,29 +83,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>tick</find>
-      <find>type</find>
-      <find>self.jumping_animation_indice = 0</find>
-      <find>projectiles</find>
-      <find>m</find>
-      <find>projectileai</find>
-      <find>norm</find>
-      <find>Project</find>
-      <find>projectile</find>
-      <find>projectileAI</find>
-      <find>jumping</find>
-      <find>AI</find>
-      <find>rigid</find>
-      <find>update</find>
-      <find>update(</find>
-      <find>upda</find>
-      <find>camp</find>
-      <find>shoot</find>
-      <find>Ennemy</find>
-      <find>is_active = True</find>
-      <find>set</find>
-      <find>self.hit = True</find>
-      <find>self.hit = True²</find>
       <find>.hit = True</find>
       <find>Deactivated</find>
       <find>hit = True</find>
@@ -132,6 +90,29 @@
       <find>a</find>
       <find>is_active = Fa</find>
       <find>self.initial_speed</find>
+      <find>palading</find>
+      <find>pop</find>
+      <find>chara</find>
+      <find>Project</find>
+      <find>clean</find>
+      <find>boss</find>
+      <find>Projecti</find>
+      <find>set_active(False</find>
+      <find>set_active(False)</find>
+      <find>on_hit</find>
+      <find>onHit</find>
+      <find>set_a</find>
+      <find>Boss</find>
+      <find>touched</find>
+      <find>touched&quot;</find>
+      <find>Touched</find>
+      <find>hit = tr</find>
+      <find>managem</find>
+      <find>Projectile</find>
+      <find>Projectile(</find>
+      <find>Projectile(²</find>
+      <find>projecti</find>
+      <find>.hit = true</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\Pendragon\PycharmProjects\JamGame</dir>
@@ -158,8 +139,8 @@
         <option value="$PROJECT_DIR$/my_utils.py" />
         <option value="$PROJECT_DIR$/parametters.py" />
         <option value="$PROJECT_DIR$/ais.py" />
-        <option value="$PROJECT_DIR$/character.py" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/character.py" />
       </list>
     </option>
   </component>
@@ -216,12 +197,13 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
+    <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Pendragon\PycharmProjects\JamGame\resources\images" />
+      <recent name="C:\Users\Pendragon\PycharmProjects\JamGame\resources\sounds" />
       <recent name="C:\Users\Pendragon\PycharmProjects\JamGame\resources\test_script" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Pendragon\PycharmProjects\JamGame\resources\sounds" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Pendragon\PycharmProjects\JamGame\resources\images" />
       <recent name="C:\Users\Pendragon\PycharmProjects\JamGame\resources\test_script" />
     </key>
   </component>
@@ -320,12 +302,12 @@
       <workItem from="1553387880983" duration="5677000" />
       <workItem from="1553393570357" duration="13633000" />
       <workItem from="1553409627928" duration="121000" />
-      <workItem from="1553409750098" duration="971000" />
+      <workItem from="1553409750098" duration="6329000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="57537000" />
+    <option name="totallyTimeSpent" value="62895000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -420,9 +402,6 @@
     <entry file="file://$PROJECT_DIR$/resources/test_script/index.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/resources/images/spawn.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/.flooignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="128">
@@ -483,33 +462,75 @@
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/random.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/background.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/background.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/paladin_bw.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/boss_bw.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/popup_bw.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/paladin_bw - Copie.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/projectile_bw.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/spawn.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/target.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/EBD3C2BE-8FC8-41EA-BFB6-FCD7C9089A5C.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/background - Copie.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/arrow_fw.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/parametters.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ais.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="54" column="20" lean-forward="true" selection-start-line="54" selection-start-column="20" selection-end-line="54" selection-end-column="20" />
+        <state relative-caret-position="338">
+          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="87" column="73" selection-start-line="87" selection-start-column="73" selection-end-line="87" selection-end-column="73" />
+        <state relative-caret-position="171">
+          <caret line="178" column="33" selection-start-line="178" selection-start-column="33" selection-end-line="178" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ais.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/character.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="82">
-          <caret line="102" column="24" lean-forward="true" selection-start-line="102" selection-start-column="24" selection-end-line="102" selection-end-column="24" />
+        <state relative-caret-position="152">
+          <caret line="62" column="40" lean-forward="true" selection-start-line="62" selection-start-column="40" selection-end-line="62" selection-end-column="40" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#0#22#0" expanded="true" />
           </folding>
         </state>
       </provider>

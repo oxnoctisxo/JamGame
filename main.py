@@ -14,7 +14,7 @@ def play_boss_sound():
 
 def init_screen():
     """
-    Initalize the screen with width and heigh
+    Initialize the screen with width and height
     :return:
     """
     pygame.init()
@@ -33,7 +33,7 @@ def init_screen():
 
 def find_spawn_point_and_spawn(spawn_points, item):
     """
-    Find a spawn point avaible for the character/ennemy and spawns him
+    Find a spawn point available for the character/enemy and spawns him
     :param spawn_points:
     :param item:
     :return:
@@ -67,7 +67,7 @@ def draw_ground(screen):
 clock = pygame.time.Clock()
 ground_lvl = height - 100
 
-player = Character(screen=screen, name="Paladin", is_forward=True)
+player = Character(screen=screen, name="Paladin", is_forward=False)
 player.is_active = True
 player.type = PLAYER_TYPE
 
@@ -83,10 +83,9 @@ mycursor = pygame.image.load(IMAGE_RESOURCES + 'target.png')
 mycursor = pygame.transform.scale(mycursor, (40, 40))
 background = pygame.image.load(IMAGE_RESOURCES + 'background.png')
 background = pygame.transform.scale(background, (width, height))
-characters = [player, Character(screen=screen, name="Paladin", is_forward=True)]
+characters = [player, Character(screen=screen, name="Paladin", is_forward=False)]
 
-ennemies = [Ennemy(screen, name="Ennmy1"), Ennemy(screen, name="Ennmy1")]
-
+ennemies = [Boss(screen, player)]
 
 for ennemy in ennemies:
     ennemy.is_active = True
@@ -99,11 +98,11 @@ spawn_points = [Spawn(screen, 20, 20, orientation=LEFT, type=PLAYER_TYPE), Spawn
 ais = []
 ais.append(EnnemyBehavior(ennemies))
 
-# Projectiles management
+# Non owned Projectiles management ( could be particles )
 projectiles = []
 
 characters[1].add_collision_listenr(player)
-# Add colistion detection
+# Add collision detection
 for rigid_body in rigid_bodies:
     characters[1].add_collision_listenr(player)
 
@@ -114,7 +113,7 @@ def look_toward_the_mouse(player):
 
 
 while 1:
-    clock.tick(60)
+    clock.tick(60)  # 60 FPS (frames per second)
 
     for event in pygame.event.get():
         # check if the event is the X button

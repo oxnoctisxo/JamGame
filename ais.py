@@ -21,6 +21,7 @@ class ProjectileBehavior:
 
                 if not projectile.can_move_left() or not projectile.can_move_right():
                     projectile.set_active(False)
+        self.clean()
 
     def clean(self):
         cmpt = len(self.projectiles) - 1
@@ -49,9 +50,9 @@ class EnnemyBehavior:
                     character.move_left()
 
                 if character.hit:
-                    print("Deactivated")
-                    self.health = 0
-                    character.set_active(False)
+                    character.hp -= 1
+                    if character.hp <= 0:
+                        character.set_active(False)
         self.clean()
 
     def clean(self):
@@ -83,3 +84,6 @@ class EnemyAIBoss:
             self.character.hit = False
         if self.health == 0:
             self.character.isActive = False
+        if i == 90:
+            character.attack()
+            i = 0

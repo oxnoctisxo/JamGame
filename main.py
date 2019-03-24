@@ -1,8 +1,15 @@
-import threading
-import time
-
 from character import *
 from my_utils import *
+
+
+def play_normal_sound():
+    pygame.mixer.music.load(SOUND_RESOURCES + 'idle.ogg')
+    pygame.mixer.music.play(-1)
+
+
+def play_boss_sound():
+    pygame.mixer.music.load(SOUND_RESOURCES + 'idle.ogg')
+    pygame.mixer.music.play(-1)
 
 
 def init_screen():
@@ -19,8 +26,8 @@ def init_screen():
     if VERBOSE:
         print("width =" + str(width))
     if VERBOSE:
-        print("height=" + str(height))
-
+        print("height  =" + str(height))
+    play_normal_sound()
     return (screen, width, height)
 
 
@@ -60,7 +67,7 @@ def draw_ground(screen):
 clock = pygame.time.Clock()
 ground_lvl = height - 100
 
-player = Character(screen=screen, name="Paladin")
+player = Character(screen=screen, name="Paladin", is_forward=True)
 player.is_active = True
 player.type = PLAYER_TYPE
 
@@ -76,9 +83,9 @@ mycursor = pygame.image.load(IMAGE_RESOURCES + 'target.png')
 mycursor = pygame.transform.scale(mycursor, (40, 40))
 background = pygame.image.load(IMAGE_RESOURCES + 'background.png')
 background = pygame.transform.scale(background, (width, height))
-characters = [player, Character(screen=screen, name="Paladin",is_forward=True)]
+characters = [player, Character(screen=screen, name="Paladin", is_forward=True)]
 
-ennemies = [Character(screen, name="Ennmy1")]
+ennemies = [Ennemy(screen, name="Ennmy1"), Ennemy(screen, name="Ennmy1")]
 
 for ennemy in ennemies:
     ennemy.is_active = True
@@ -87,12 +94,11 @@ for ennemy in ennemies:
 
 spawn_points = [Spawn(screen, 20, 20, orientation=LEFT, type=PLAYER_TYPE), Spawn(screen, 100, 100, orientation=RIGHT)]
 
-
 # AI management
 ais = []
-ais.append(EnnemyAI1(ennemies))
+ais.append(EnnemyBehavior(ennemies))
 
-#Projectiles management
+# Projectiles management
 projectiles = []
 
 characters[1].add_collision_listenr(player)
@@ -107,7 +113,7 @@ def look_toward_the_mouse(player):
 
 
 while 1:
-    clock.tick(120)
+    clock.tick(60)
 
     for event in pygame.event.get():
         # check if the event is the X button
@@ -143,20 +149,9 @@ while 1:
 
         # Allow attacking anytime
         if pygame.mouse.get_pressed()[0] and not player.is_attacking:
-            mouse_pos = pygame.mouse.get_pos()
-            if VERBOSE:
-                print("Mouse down left")
-                print("MOUSEBUTTONDOWN pos=" + str(mouse_pos))
             player.is_attacking = True
-
-
-            def delayed_animation():
-                time.sleep(ANIMATION_TIME)
-                player.is_attacking = False
-
-
-            t = threading.Thread(target=delayed_animation)
-            t.start()
+        if not pygame.mouse.get_pressed()[0] and player.is_attacking:
+            player.is_attacking = False
 
     screen.blit(background, (0, 0))
     for rigid_body in rigid_bodies:
@@ -176,9 +171,51 @@ while 1:
                 projectile.update()
                 projectile.blitme()
 
-    for ennemy in ennemies:
-        ennemy.update()
-        ennemy.blitme()
+    ennemies_computed = False
 
+
+    def compute_ennemies():
+        for ennemy in ennemies:
+            ennemy.collision_listeners = player.projectiles
+            ennemy.update()
+            ennemy.blitme()
+            ennemies_computed = True
+
+
+    compute_ennemies()
+
+    # q = queue.Queue()
+    #
+    #
+    # def do_work(func):
+    #     func()
+    #
+    #
+    # def worker():
+    #     while True:
+    #         item = q.get()
+    #         if item is None:
+    #             break
+    #         do_work(item)
+    #         q.task_done()
+    #
+    #
+    # threads = []
+    # for i in range(num_worker_threads):
+    #     t = threading.Thread(target=worker)
+    #     t.start()
+    #     threads.append(t)
+    #
+    # for item in [compute_ennemies()]:
+    #     q.put(item)
+    #
+    # # block until all tasks are done
+    # q.join()
+    #
+    # # stop workers
+    # for i in range(num_worker_threads):
+    #     q.put(None)
+    # for t in threads:
+    #     t.join()
     screen.blit(mycursor, (pygame.mouse.get_pos()))
     pygame.display.flip()

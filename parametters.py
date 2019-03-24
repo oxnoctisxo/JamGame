@@ -35,5 +35,8 @@ ANIMATION_TIME = 0.2
 
 #RESOURCES
 IMAGE_RESOURCES = "resources/images/"
+SOUND_RESOURCES = "resources/sounds/"
 
 VERBOSE = True
+
+num_worker_threads = 4

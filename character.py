@@ -2,6 +2,7 @@ import time
 
 import pygame
 
+from ais import *
 from parametters import *
 
 
@@ -32,6 +33,7 @@ class HitBox(pygame.sprite.Sprite):
 
     def ontouch(self, collision_listener):
         if self.is_active:
+            self.hit = True
             if VERBOSE:
                 print("Object touched")
 
@@ -92,10 +94,13 @@ class Character(HitBox):
 
         # Projectile
         self.projectiles = []
-        self.projectileAI = ProjectileAI(self.projectiles)
+        self.projectileAI = ProjectileBehavior(self.projectiles)
 
         self.last_shoot = time.time()
         self.shotting_wait = PLAYER_ATTACK_SPEED
+
+        # Hitting
+        self.hit = False
 
     def jump(self):
         if not self.is_jumping:
@@ -133,7 +138,6 @@ class Character(HitBox):
         if self.type == PLAYER_TYPE:
             current_time = time.time()
             if current_time - self.last_shoot > self.shotting_wait:
-                print("Shooting")
                 p = Projectile(self.screen, origin=self.type)
                 p.rect.centerx = self.rect.centerx
                 p.rect.centery = self.rect.centery
@@ -288,44 +292,8 @@ class Spawn(pygame.sprite.Sprite):
     def blitme(self):
         self.orient(self.image, self.rect, RIGHT)
 
-
-class ProjectileAI:
-
-    def __init__(self, projectiles=[]):
-        self.projectiles = projectiles
-
-    def update(self):
-        for projectile in self.projectiles:
-            if projectile.is_active:
-                if projectile.trajectory[0] > 0 or (projectile.trajectory[0] == 0 and projectile.orientation == RIGHT):
-                    projectile.move_right(multiplier=projectile.trajectory[0] * PROJECTILE_SPEED)
-                else:
-                    projectile.move_left(multiplier=projectile.trajectory[0] * PROJECTILE_SPEED)
-
-                if projectile.trajectory[1] < 0 or (projectile.trajectory[0] == 0 and projectile.orientation == DOWN):
-                    projectile.move_up(multiplier=projectile.trajectory[1] * PROJECTILE_SPEED)
-                else:
-                    projectile.move_down(multiplier=projectile.trajectory[1] * PROJECTILE_SPEED)
-
-                if not projectile.can_move_left() or not projectile.can_move_right():
-                    projectile.is_active = False
-
-
-class EnnemyAI1:
-    def __init__(self, characters=[]):
-        self.characters = characters
-
-    def update(self):
-        for character in self.characters:
-            if character.orientation == RIGHT and not character.can_move_right():
-                character.orientation = LEFT
-            if character.orientation == LEFT and not character.can_move_left():
-                character.orientation = RIGHT
-
-            if character.orientation == RIGHT:
-                character.move_right()
-            else:
-                character.move_left()
+    def onHit(self):
+        pass
 
 
 class Projectile(Character):
@@ -374,20 +342,30 @@ class Projectile(Character):
 
         self.hitbox_update()
 
+
+class Ennemy(Character):
+
+    def __init__(self, screen, name="Ennmy1", is_forward=False, dimensions=CHARACTER_DIMENSIONS):
+        super().__init__(screen, name, is_forward, dimensions=CHARACTER_DIMENSIONS)
+
+
+    def ontouch(self, collision_listener):
+        if collision_listener.is_active and self.is_active :
+            self.hit = True
+
+
 class Boss:
-    def __init__(self,x,y,pattern,brain):
+    def __init__(self, x, y, pattern, brain):
         self.attacks = []
-        self.pos = (x,y)
+        self.pos = (x, y)
         self.IsDead = False
         self.pattern = pattern
         self.brain = brain
 
-    def on_hit(self):
-        print('boss tué')
-        self.brain.Wave()
-
-
-
+        def on_hit(self):
+            self.health -= 1
+            if self.health == 0:
+                isActive = False
 
     def on_hit(self):
         self.IsDead = True
@@ -396,13 +374,14 @@ class Boss:
         if self.brain.num_en <= 0:
             self.brain.Boss()
 
+
 class Brain:
 
-    def __init__ (self, boss):
-        self.en_list = ["LOL", "WOW", "Spinner"] #liste des ennemis (fauudra foutre les types)
-        self.waves = [[6,0,0],[6,2,0],[8,6,3]] #qtt de chaque ennemi pour chaque vague
-        self.attacks = [1,1,2]   #patterns d'attaques du boss
-        self.wave = 0  #vague suivante
+    def __init__(self, boss):
+        self.en_list = ["LOL", "WOW", "Spinner"]  # liste des ennemis (fauudra foutre les types)
+        self.waves = [[6, 0, 0], [6, 2, 0], [8, 6, 3]]  # qtt de chaque ennemi pour chaque vague
+        self.attacks = [1, 1, 2]  # patterns d'attaques du boss
+        self.wave = 0  # vague suivante
         self.boss = boss
         self.num_en = 0
         self.spawnTime = False
@@ -410,18 +389,28 @@ class Brain:
     def Wave(self):
         if self.wave >= len(self.waves):
             print("Finiti")
-            return False                    #Mettre un systteme de fin du jeu/loop en place
+            return False  # Mettre un systteme de fin du jeu/loop en place
         self.spawnTime = True
         for i in range(len(self.en_list)):
-            print("spawn de {} {}".format(str(self.waves[self.wave][i]),self.en_list[i]))   # INSERER FONCTIONDE SPAWN
+            print("spawn de {} {}".format(str(self.waves[self.wave][i]), self.en_list[i]))  # INSERER FONCTIONDE SPAWN
             self.num_en += self.waves[self.wave][i]
         self.spawnTime = False
-
 
     def Boss(self):
         if self.wave >= len(self.waves):
             print("Finito")
-            return False                    #Mettre un systteme de fin du jeu/loop en place
-        print("spawn du boss avec le patern " + str(self.attacks[self.wave]))    #INSERER SPAWN DE BOSS
+            return False  # Mettre un systteme de fin du jeu/loop en place
+        print("spawn du boss avec le patern " + str(self.attacks[self.wave]))  # INSERER SPAWN DE BOSS
         self.wave += 1
 
+
+### PopUp
+
+class PopUp(Character):
+
+    def get_hit_box(self):
+        """
+        Return a rect containing
+        :return:
+        """
+        pass

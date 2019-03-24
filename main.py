@@ -82,6 +82,8 @@ ennemies = [Character(screen, name="Ennmy1")]
 
 for ennemy in ennemies:
     ennemy.is_active = True
+    ennemy.rigid_bodies.extend(rigid_bodies)
+    ennemy.jump()
 
 spawn_points = [Spawn(screen, 20, 20, orientation=LEFT, type=PLAYER_TYPE), Spawn(screen, 100, 100, orientation=RIGHT)]
 
@@ -163,13 +165,16 @@ while 1:
     look_toward_the_mouse(player)
     for ai in ais:
         ai.update()
-    # manage charaters on the screen
+    # manage characters on the screen
     for character in (characters + ennemies):
         if not character.spawned and character.is_active:
             find_spawn_point_and_spawn(spawn_points=spawn_points, item=character)
         if character.is_active:
             character.update()
             character.blitme()
+            for projectile in character.projectiles:
+                projectile.update()
+                projectile.blitme()
 
     for ennemy in ennemies:
         ennemy.update()

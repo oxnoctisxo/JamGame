@@ -1,6 +1,7 @@
+import time
+
 import pygame
 
-from main import projectiles
 from parametters import *
 
 
@@ -93,6 +94,9 @@ class Character(HitBox):
         self.projectiles = []
         self.projectileAI = ProjectileAI(self.projectiles)
 
+        self.last_shoot = time.time()
+        self.shotting_wait = PLAYER_ATTACK_SPEED
+
     def jump(self):
         if not self.is_jumping:
             self.is_jumping = True
@@ -102,36 +106,43 @@ class Character(HitBox):
         if self.jumping_animation_indice < len(self.jumping_animation) and self.is_jumping:
             self.jumping_animation[self.jumping_animation_indice](multiplier=2)
             self.jumping_animation_indice = self.jumping_animation_indice + 1
-            if VERBOSE:
-                print("Jumping", self.jumping_animation_indice)
         else:
             self.is_jumping = False
             self.jumping_animation_indice = 0
 
     def move_up(self, val=True, multiplier=1):
         self.moving_vertically = val
-        self.speed_y = -abs(self.initial_speed * multiplier)
+        self.speed_y = int(-abs(self.initial_speed * multiplier))
 
     def move_down(self, val=True, multiplier=1):
         self.moving_vertically = val
-        self.speed_y = abs(self.initial_speed * multiplier)
+        self.speed_y = int(abs(self.initial_speed * multiplier))
 
     def move_right(self, val=True, multiplier=1):
         self.moving_horizontally = val
-        self.speed_x = abs(self.initial_speed * multiplier)
+        self.speed_x = int(abs(self.initial_speed * multiplier))
 
     def move_left(self, val=True, multiplier=1):
         self.moving_horizontally = val
-        self.speed_x = -abs(self.initial_speed * multiplier)
+        self.speed_x = int(-abs(self.initial_speed * multiplier))
 
     def __str__(self):
         return str(self.name)
 
     def attack(self):
         if self.type == PLAYER_TYPE:
-            p = Projectile(self.screen, origin=self.type)
-            p.orientation = self.orientation
-            self.projectiles.append(p)
+            current_time = time.time()
+            if current_time - self.last_shoot > self.shotting_wait:
+                print("Shooting")
+                p = Projectile(self.screen, origin=self.type)
+                p.rect.centerx = self.rect.centerx
+                p.rect.centery = self.rect.centery
+                p.orientation = self.orientation
+                p.set_trajectory()
+                p.is_active = True
+                self.projectiles.append(p)
+                self.last_shoot = current_time
+
         #
         # animation_rect = self.animation.get_rect()
         # animation_rect.bottom = self.rect.bottom
@@ -171,17 +182,24 @@ class Character(HitBox):
     def can_move_left(self):
         return self.rect.left > 0
 
+    def is_moving_right(self):
+        return self.speed_x >= 0
+
+    def is_moving_left(self):
+        return self.speed_x < 0
+
     def update(self):
         if not self.is_active:
             return
         self.projectileAI.update()
 
-        if self.can_move_right() and self.can_move_left():
+        if (self.can_move_right() and self.is_moving_right()) or (self.can_move_left() and self.is_moving_left()):
             if self.moving_horizontally:
-                self.orientation = self.direction[0] if self.speed_x >= 0 else self.direction[1]
+                self.orientation = self.direction[0] if self.speed_x > 0 else self.direction[
+                    1] if self.speed_x < 0 else self.orientation
                 self.rect.centerx += self.campled_movement(self.speed_x, isX=True)
 
-        if self.rect.top > 0 and self.rect.bottom <= self.screen_rect.bottom:
+        if self.rect.top > 0 or self.rect.bottom <= self.screen_rect.bottom:
             if self.moving_vertically:
                 real_offset = self.campled_movement(self.speed_y, isX=False)
                 self.rect.bottom += real_offset
@@ -200,9 +218,10 @@ class Character(HitBox):
         self.screen.blit(image if orientation == RIGHT else pygame.transform.flip(image, True, False), rect)
 
     def blitme(self):
-        self.orient(self.image, self.rect, self.orientation)
-        if self.is_attacking and self.animation is not None:
-            self.orient(self.animation, self.animation_rect, self.orientation)
+        if self.is_active:
+            self.orient(self.image, self.rect, self.orientation)
+        # if self.is_attacking and self.animation is not None:
+        #    self.orient(self.animation, self.animation_rect, self.orientation)
 
 
 class RigidBody(Character):
@@ -278,14 +297,21 @@ class ProjectileAI:
     def update(self):
         for projectile in self.projectiles:
             if projectile.is_active:
-                if projectile.orientation == RIGHT:
-                    projectile.move_right(multiplier=3)
+                if projectile.trajectory[0] > 0 or (projectile.trajectory[0] == 0 and projectile.orientation == RIGHT):
+                    projectile.move_right(multiplier=projectile.trajectory[0] * PROJECTILE_SPEED)
                 else:
-                    projectile.move_left(multiplier=3)
+                    projectile.move_left(multiplier=projectile.trajectory[0] * PROJECTILE_SPEED)
+
+                if projectile.trajectory[1] < 0 or (projectile.trajectory[0] == 0 and projectile.orientation == DOWN):
+                    projectile.move_up(multiplier=projectile.trajectory[1] * PROJECTILE_SPEED)
+                else:
+                    projectile.move_down(multiplier=projectile.trajectory[1] * PROJECTILE_SPEED)
+
+                if not projectile.can_move_left() or not projectile.can_move_right():
+                    projectile.is_active = False
 
 
 class EnnemyAI1:
-
     def __init__(self, characters=[]):
         self.characters = characters
 
@@ -299,7 +325,6 @@ class EnnemyAI1:
             if character.orientation == RIGHT:
                 character.move_right()
             else:
-                print("Ennemy moving left")
                 character.move_left()
 
 
@@ -308,8 +333,6 @@ class Projectile(Character):
                  origin=ENNEMY_TYPE):
         super().__init__(screen, name, False, dimensions)
         self.sender_type = origin
-        self.is_active = True
-        projectiles.append(self)
 
     def ontouch(self, collision_listener):
         if self.is_active:
@@ -317,26 +340,60 @@ class Projectile(Character):
                 collision_listener.on_hit()
             self.is_active = False
 
-# class Boss:
+    def set_trajectory(self):
+        x_mouse, y_mouse = pygame.mouse.get_pos()
+        x = self.rect.centerx
+        y = self.rect.centery
+        self.is_active = True
+        self.start_time = 0
+        norm = 1 / pow((pow(x_mouse - x, 2) + pow(y_mouse - y, 2)), 0.5)
+        self.trajectory = ((x_mouse - x) * norm, (y_mouse - y) * norm)
+
+    def update(self):
+        if not self.is_active:
+            return
+
+        if self.can_move_right() and self.can_move_left():
+            if self.moving_horizontally:
+                self.orientation = self.direction[0] if self.speed_x > 0 else self.direction[
+                    1] if self.speed_x < 0 else self.orientation
+                self.rect.centerx += self.campled_movement(self.speed_x, isX=True)
+
+        if self.rect.top > 0 or self.rect.bottom <= self.screen_rect.bottom:
+            if self.moving_vertically:
+                real_offset = self.campled_movement(self.speed_y, isX=False)
+                self.rect.bottom += real_offset
+                # If we did hit the ground
+                if real_offset != self.speed_y:
+                    self.jumping = False
+                    self.jumping_animation_indice = 0
+
+        self.manage_jump()
+        if self.is_attacking:
+            self.attack()
+
+        self.hitbox_update()
+
+class Boss:
+
+   def __init__(self,x,y,patern,brain):
+         self.attacks = []
+         self.pos = (x,y)
+         self.IsDead = True
+         self.patern = patern
+         self.brain = brain
+
 #
-#     def __init__(self,x,y,patern,brain):
-#         self.attacks = []
-#         self.pos = (x,y)
-#         self.IsDead = True
-#         self.patern = patern
-#         self.brain = brain
+     def on_hit(self):
+         print('boss tué')
+         self.brain.Wave()
+
+
 #
-#
-#     def on_hit(self):
-#         print('boss tué')
-#         self.brain.Wave()
-#
-#
-#
-#
-#     def on_hit(self):
-#         self.IsDead = True
-#         self.brain.num_en -= 1
+
+     def on_hit(self):
+         self.IsDead = True
+         self.brain.num_en -= 1
 #         print("ennemi tué")
 #         if self.brain.num_en <= 0:
 #             self.brain.Boss()

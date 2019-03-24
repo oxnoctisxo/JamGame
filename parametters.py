@@ -22,7 +22,9 @@ RIGID_BODY_DIMENSIONS = (25,25)
 
 PROJECTILE_DIMENSIONS = (30, 30)
 
-
+#Projectile-Related info
+PROJECTILE_SPEED = 3
+PLAYER_ATTACK_SPEED = 0.4
 # Screen related informations
 width, height = 200, 200
 

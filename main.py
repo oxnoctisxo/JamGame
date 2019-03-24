@@ -110,14 +110,17 @@ boss.rigid_bodies.append(rigid_bodies[0])
 player.collision_listeners = boss.projectiles
 boss.collision_listeners  = player.projectiles
 characters = [player, boss]
+ennemies = []
+def spawn_enemy():
+    new_ennemies = [Ennemy(screen)] * 1
 
-ennemies = [Ennemy(screen)] * 1
+    for ennemy in new_ennemies:
+        ennemy.is_active = True
+        ennemy.rigid_bodies.extend(rigid_bodies)
+        ennemy.jump()
+    ennemies.extend(new_ennemies)
 
-for ennemy in ennemies:
-    ennemy.is_active = True
-    ennemy.rigid_bodies.extend(rigid_bodies)
-    ennemy.jump()
-
+spawn_enemy()
 spawn_points = [Spawn(screen, width / 2, height / 2, orientation=LEFT, type=PLAYER_TYPE)
     , Spawn(screen, 0, 0, orientation=RIGHT, type=ENNEMY_TYPE)
     , Spawn(screen, 0, 0, orientation=RIGHT, type=ENNEMY_TYPE, is_for_boss=True)
@@ -143,9 +146,15 @@ def look_toward_the_mouse(player):
 
 
 show_popup = False
+last_spawn = time.time()
 
 while 1:
     clock.tick(60)  # 60 FPS (frames per second)
+    current_time = time.time()
+
+    if current_time - last_spawn < SPAWN_TIME:
+        last_spawn = current_time
+        spawn_enemy()
 
     for event in pygame.event.get():
         # check if the event is the X button

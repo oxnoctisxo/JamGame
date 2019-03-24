@@ -152,9 +152,9 @@ while 1:
     clock.tick(60)  # 60 FPS (frames per second)
     current_time = time.time()
 
-    if current_time - last_spawn < SPAWN_TIME:
-        last_spawn = current_time
+    if current_time - last_spawn > SPAWN_TIME:
         spawn_enemy()
+        last_spawn = current_time
 
     for event in pygame.event.get():
         # check if the event is the X button

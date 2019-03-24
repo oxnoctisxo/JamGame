@@ -1,8 +1,11 @@
+import os
+
 from character import *
 from my_utils import *
 
 
 def play_normal_sound():
+    # pygame.mixer.Channel(0).play(pygame.mixer.Sound('boss.ogg'))
     pygame.mixer.music.load(SOUND_RESOURCES + 'idle.ogg')
     pygame.mixer.music.play(-1)
 
@@ -20,6 +23,7 @@ def init_screen():
     x = 60
     y = 60
     os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (x, y)
+    os.environ['SDL_VIDEO_CENTERED'] = '1'
     pygame.init()
 
     infoObject = pygame.display.Info()
@@ -30,6 +34,8 @@ def init_screen():
         print("width =" + str(width))
     if VERBOSE:
         print("height  =" + str(height))
+
+    pygame.display.set_caption('Clickb8')
     play_normal_sound()
     return (screen, width, height)
 
@@ -88,10 +94,14 @@ mycursor = pygame.image.load(IMAGE_RESOURCES + 'target.png')
 mycursor = pygame.transform.scale(mycursor, (40, 40))
 background = pygame.image.load(IMAGE_RESOURCES + 'background.png')
 background = pygame.transform.scale(background, (width, height))
-characters = [player, Character(screen=screen, name="Paladin", is_forward=False)]
 
 boss = Boss(screen, player)
-ennemies = [Ennemy(screen)] * 10
+boss.set_active(True)
+boss.rigid_bodies.append(rigid_bodies[0])
+player.collision_listeners.extend(boss.projectiles)
+characters = [player, boss]
+
+ennemies = [Ennemy(screen)] * 1
 
 for ennemy in ennemies:
     ennemy.is_active = True
@@ -118,8 +128,9 @@ def look_toward_the_mouse(player):
     (m_x, m_y) = pygame.mouse.get_pos()
     player.orientation = RIGHT if player.rect.centerx < m_x else LEFT
 
-
+i = 0
 while 1:
+    i+=1
     clock.tick(60)  # 60 FPS (frames per second)
 
     for event in pygame.event.get():
@@ -169,6 +180,8 @@ while 1:
     for ai in ais:
         ai.update()
     # manage characters on the screen
+    if i ==80:
+        character.append(Ennemy
     for character in (characters + ennemies):
         if not character.spawned and character.is_active:
             find_spawn_point_and_spawn(spawn_points=spawn_points, item=character)

@@ -33,7 +33,7 @@ class HitBox(pygame.sprite.Sprite):
         #                                                                                                   other_hitbox)
 
     def ontouch(self, collision_listener):
-        if self.is_active:
+        if self.is_active and collision_listener.type != self.type:
             self.hit = True
             if VERBOSE:
                 print("Object touched")
@@ -56,7 +56,7 @@ class HitBox(pygame.sprite.Sprite):
     def hitbox_update(self):
         # Checks all the collisions
         for collision_listener in self.collision_listeners:
-            if collision_listener.is_active and self.is_active:
+            if collision_listener.is_active and self.is_active and collision_listener.type != self.type:
                 if self.touched(collision_listener):
                     self.ontouch(collision_listener)
                     collision_listener.ontouch(self)
@@ -181,6 +181,9 @@ class Character(HitBox):
             if not projectile.is_active:
                 self.projectiles.pop(cmpt)
 
+    def attacking_sound(self):
+        pass
+
     def attack(self):
         if self.type == PLAYER_TYPE:
             current_time = time.time()
@@ -193,6 +196,7 @@ class Character(HitBox):
                 p.is_active = True
                 self.projectiles.append(p)
                 self.last_shoot = current_time
+                self.attacking_sound()
         self.clean_projectiles()
         #
         # animation_rect = self.animation.get_rect()
@@ -351,9 +355,11 @@ class Projectile(Character):
         super().__init__(screen, name, is_forward=is_forward, dimensions=dimensions)
         self.sender_type = origin
         self.source = source
+        self.spin_direction = 0
 
     def ontouch(self, collision_listener):
-        print("Collision listener on touch")
+        if VERBOSE:
+            print("Collision listener on touch")
 
     # if self.is_active:
     # collision_listener.onHit()
@@ -365,7 +371,8 @@ class Projectile(Character):
         y = self.rect.centery
         self.is_active = True
         self.start_time = 0
-        norm = 1 / pow((pow(x_mouse - x, 2) + pow(y_mouse - y, 2)), 0.5)
+        right_side = pow((pow(x_mouse - x, 2) + pow(y_mouse - y, 2)), 0.5)
+        norm = 1 / right_side if right_side != 0 else 1
         self.trajectory = ((x_mouse - x) * norm, (y_mouse - y) * norm)
 
     def update(self):
@@ -389,6 +396,21 @@ class Projectile(Character):
 
         self.manage_jump()
 
+    def orient(self, image, rect, orientation=RIGHT):
+        if self.spin_direction == 0:
+            self.screen.blit(pygame.transform.flip(image, False, False), rect)
+        elif self.spin_direction == 1:
+            self.screen.blit(pygame.transform.flip(image, False, True), rect)
+        elif self.spin_direction == 2:
+            self.screen.blit(pygame.transform.flip(image, True, False), rect)
+        elif self.spin_direction == 3:
+            self.screen.blit(pygame.transform.flip(image, True, True), rect)
+
+    def blitme(self):
+        if self.is_active:
+            self.orient(self.image, self.rect, self.orientation)
+            self.spin_direction = ((self.spin_direction + 1 )% 4)
+
 
 class Ennemy(Character):
 
@@ -399,21 +421,23 @@ class Ennemy(Character):
         self.initial_speed = self.initial_speed + rand.randint(-2, 2)
 
     def ontouch(self, collision_listener):
-        if collision_listener.is_active and self.is_active:
+        if collision_listener.is_active and self.is_active and collision_listener.type != self.type:
             self.hit = True
 
 
 class Boss(Character):
 
-    def __init__(self, screen, player=None, projectiles=[], name="Boss", is_forward=False, dimensions=BOSS_DIMENSION):
+    def __init__(self, screen, player=None, name="Boss", is_forward=False, dimensions=BOSS_DIMENSION):
         super().__init__(screen, name, is_forward, dimensions)
         self.speed_x = self.speed_x + rand.randint(-1, 1)
         self.speed_y = self.speed_y + rand.randint(-1, 1)
         self.initial_speed = self.initial_speed + rand.randint(-2, 2)
         self.player = player
-        self.projectiles = projectiles
-        self.hp = 100
+        self.hp = 600
         self.play_boss_sound()
+        self.type = ENNEMY_TYPE
+        self.shotting_wait = 1
+        self.rect.centerx, self.rect.centery = (758, 325)
 
     def play_normal_sound(self):
         pygame.mixer.music.load(SOUND_RESOURCES + 'idle.ogg')
@@ -422,6 +446,10 @@ class Boss(Character):
     def play_boss_sound(self):
         pygame.mixer.music.load(SOUND_RESOURCES + 'boss.ogg')
         pygame.mixer.music.play(-1)
+
+    def ontouch(self, collision_listener):
+        if collision_listener.type != self.type and self.is_active and collision_listener.is_active:
+            self.hit = True
 
     def set_active(self, val=False):
         """
@@ -434,22 +462,14 @@ class Boss(Character):
             self.hit = False
             self.jumping = False
             self.play_normal_sound()
-
-    def init_2(self, boss):
-        self.en_list = ["LOL", "WOW", "Spinner"]  # liste des ennemis (fauudra foutre les types)
-        self.waves = [[6, 0, 0], [6, 2, 0], [8, 6, 3]]  # qtt de chaque ennemi pour chaque vague
-        self.attacks = [1, 1, 2]  # patterns d'attaques du boss
-        self.wave = 0  # vague suivante
-        self.boss = boss
-        self.num_en = 0
-        self.spawnTime = False
-        self.type = ENNEMY_TYPE
-        self.shotting_wait = 4
+        else:
+            self.is_active = True
 
     def attack(self):
         current_time = time.time()
         if current_time - self.last_shoot > self.shotting_wait:
-            p = Projectile(self.screen, source=self.player, name="Arrow", origin=self.type, dimensions=ARROW_DIMENSIONS,
+            p = Projectile(self.screen, source=self.player, name="Spinner", origin=self.type,
+                           dimensions=ARROW_DIMENSIONS,
                            is_forward=True)
             p.rect.centerx = self.rect.centerx
             p.rect.centery = self.rect.centery
@@ -458,23 +478,6 @@ class Boss(Character):
             p.is_active = True
             self.projectiles.append(p)
             self.last_shoot = current_time
-
-    def Wave(self):
-        if self.wave >= len(self.waves):
-            print("Finiti")
-            return False  # Mettre un système de fin du jeu/loop en place
-        self.spawnTime = True
-        for i in range(len(self.en_list)):
-            print("spawn de {} {}".format(str(self.waves[self.wave][i]), self.en_list[i]))  # INSERER FONCTION DE SPAWN
-            self.num_en += self.waves[self.wave][i]
-        self.spawnTime = False
-
-    def Boss(self):
-        if self.wave >= len(self.waves):
-            print("Finito")
-            return False  # Mettre un système de fin du jeu/loop en place
-        print("spawn du boss avec le patern " + str(self.attacks[self.wave]))  # INSERER SPAWN DE BOSS
-        self.wave += 1
 
 
 ### PopUp

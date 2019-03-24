@@ -64,6 +64,9 @@ player = Character(screen=screen, name="Paladin")
 player.is_active = True
 player.type = PLAYER_TYPE
 
+rigid_bodies = draw_ground(screen)
+player.rigid_bodies.extend(rigid_bodies)
+
 # Mouse management
 
 pygame.mouse.set_visible(False)  # hide the cursor
@@ -81,8 +84,6 @@ ennemies = [Character(screen, name="Ennmy1")]
 # character.is_active = True
 
 spawn_points = [Spawn(screen, 20, 20, orientation=LEFT, type=PLAYER_TYPE), Spawn(screen, 100, 100, orientation=RIGHT)]
-rigid_bodies = draw_ground(screen)
-player.rigid_bodies.extend(rigid_bodies)
 
 ais = []
 ais.append(EnnemyAI1(ennemies))
@@ -155,13 +156,19 @@ while 1:
         rigid_body.blitme()
     # Orient player toward the mouse
     look_toward_the_mouse(player)
+    for ai in ais:
+        ai.update()
     # manage charaters on the screen
-    for character in characters:
+    for character in (characters + ennemies):
         if not character.spawned and character.is_active:
             find_spawn_point_and_spawn(spawn_points=spawn_points, item=character)
         if character.is_active:
             character.update()
             character.blitme()
+
+    for ennemy in ennemies:
+        ennemy.update()
+        ennemy.blitme()
 
     screen.blit(mycursor, (pygame.mouse.get_pos()))
     pygame.display.flip()

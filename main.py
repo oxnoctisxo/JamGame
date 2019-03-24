@@ -76,7 +76,7 @@ mycursor = pygame.image.load(IMAGE_RESOURCES + 'target.png')
 mycursor = pygame.transform.scale(mycursor, (40, 40))
 background = pygame.image.load(IMAGE_RESOURCES + 'background.png')
 background = pygame.transform.scale(background, (width, height))
-characters = [player, Character(screen=screen, name="Paladin")]
+characters = [player, Character(screen=screen, name="Paladin",is_forward=True)]
 
 ennemies = [Character(screen, name="Ennmy1")]
 

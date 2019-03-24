@@ -375,58 +375,53 @@ class Projectile(Character):
         self.hitbox_update()
 
 class Boss:
+    def __init__(self,x,y,pattern,brain):
+        self.attacks = []
+        self.pos = (x,y)
+        self.IsDead = False
+        self.pattern = pattern
+        self.brain = brain
 
-   def __init__(self,x,y,patern,brain):
-         self.attacks = []
-         self.pos = (x,y)
-         self.IsDead = True
-         self.patern = patern
-         self.brain = brain
-
-#
-     def on_hit(self):
-         print('boss tué')
-         self.brain.Wave()
+    def on_hit(self):
+        print('boss tué')
+        self.brain.Wave()
 
 
-#
 
-     def on_hit(self):
-         self.IsDead = True
-         self.brain.num_en -= 1
-#         print("ennemi tué")
-#         if self.brain.num_en <= 0:
-#             self.brain.Boss()
-#
-#
-#
-#
-# class Brain:
-#
-#     def __init__ (self, boss):
-#         self.en_list = ["LOL", "WOW", "Spinner"] #liste des ennemis (fauudra foutre les types)
-#         self.waves = [[6,0,0],[6,2,0],[8,6,3]] #qtt de chaque ennemi pour chaque vague
-#         self.attacks = [1,1,2]   #patterns d'attaques du boss
-#         self.wave = 0  #vague suivante
-#         self.boss = boss
-#         self.num_en = 0
-#         self.spawnTime = False
-#
-#     def Wave(self):
-#         if self.wave >= len(self.waves):
-#             print("Finiti")
-#             return False                    #Mettre un systteme de fin du jeu/loop en place
-#         self.spawnTime = True
-#         for i in range(len(self.en_list)):
-#             print("spawn de {} {}".format(str(self.waves[self.wave][i]),self.en_list[i]))   # INSERER FONCTIONDE SPAWN
-#             self.num_en += self.waves[self.wave][i]
-#         self.spawnTime = False
-#
-#
-#     def Boss(self):
-#         if self.wave >= len(self.waves):
-#             print("Finito")
-#             return False                    #Mettre un systteme de fin du jeu/loop en place
-#         print("spawn du boss avec le patern " + str(self.attacks[self.wave]))    #INSERER SPAWN DE BOSS
-#         self.wave += 1
-#
+
+    def on_hit(self):
+        self.IsDead = True
+        self.brain.num_en -= 1
+        print("ennemi tué")
+        if self.brain.num_en <= 0:
+            self.brain.Boss()
+
+class Brain:
+
+    def __init__ (self, boss):
+        self.en_list = ["LOL", "WOW", "Spinner"] #liste des ennemis (fauudra foutre les types)
+        self.waves = [[6,0,0],[6,2,0],[8,6,3]] #qtt de chaque ennemi pour chaque vague
+        self.attacks = [1,1,2]   #patterns d'attaques du boss
+        self.wave = 0  #vague suivante
+        self.boss = boss
+        self.num_en = 0
+        self.spawnTime = False
+
+    def Wave(self):
+        if self.wave >= len(self.waves):
+            print("Finiti")
+            return False                    #Mettre un systteme de fin du jeu/loop en place
+        self.spawnTime = True
+        for i in range(len(self.en_list)):
+            print("spawn de {} {}".format(str(self.waves[self.wave][i]),self.en_list[i]))   # INSERER FONCTIONDE SPAWN
+            self.num_en += self.waves[self.wave][i]
+        self.spawnTime = False
+
+
+    def Boss(self):
+        if self.wave >= len(self.waves):
+            print("Finito")
+            return False                    #Mettre un systteme de fin du jeu/loop en place
+        print("spawn du boss avec le patern " + str(self.attacks[self.wave]))    #INSERER SPAWN DE BOSS
+        self.wave += 1
+

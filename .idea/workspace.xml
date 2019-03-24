@@ -2,13 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d877cad8-6991-4df2-bb78-22ad30afd938" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/button_bw.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sounds/Punch_01.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sounds/Shoot_01.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sounds/Spinner_01.ogg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/sounds/Woosh_01.ogg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cercle.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ais.py" beforeDir="false" afterPath="$PROJECT_DIR$/ais.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/button_bw.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/character.py" beforeDir="false" afterPath="$PROJECT_DIR$/character.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/parametters.py" beforeDir="false" afterPath="$PROJECT_DIR$/parametters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/images/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/images/onglet_bw.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/images/ennmy1_bw.jfif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/images/onglet_bw.png" beforeDir="false" afterPath="$PROJECT_DIR$/resources/images/onglet_bw.png" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,15 +23,15 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/JamGame$pygame08MouseCursor.coverage" NAME="pygame08MouseCursor Coverage Results" MODIFIED="1553370413828" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/resources/test_script" />
-    <SUITE FILE_PATH="coverage/JamGame$main.coverage" NAME="main Coverage Results" MODIFIED="1553423592283" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/JamGame$main.coverage" NAME="main Coverage Results" MODIFIED="1553425628956" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/character.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="298">
-              <caret line="425" column="41" lean-forward="true" selection-start-line="425" selection-start-column="41" selection-end-line="425" selection-end-column="41" />
+            <state relative-caret-position="291">
+              <caret line="399" column="91" selection-start-line="399" selection-start-column="78" selection-end-line="399" selection-end-column="91" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -34,11 +39,23 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ais.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="443">
+              <caret line="98" column="8" selection-start-line="98" selection-start-column="8" selection-end-line="98" selection-end-column="8" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="42" column="45" selection-start-line="42" selection-start-column="45" selection-end-line="42" selection-end-column="45" />
+            <state relative-caret-position="171">
+              <caret line="76" column="18" selection-start-line="76" selection-start-column="9" selection-end-line="76" selection-end-column="18" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -47,10 +64,42 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3 2.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3 7.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3 10.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/resources/images/EBD3C2BE-8FC8-41EA-BFB6-FCD7C9089A5C.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/parametters.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+            <state relative-caret-position="128">
+              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/my_utils.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="48">
+              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+              <folding>
+                <element signature="e#0#25#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -66,11 +115,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>on_hit</find>
-      <find>onHit</find>
-      <find>set_a</find>
-      <find>Boss</find>
-      <find>touched</find>
       <find>touched&quot;</find>
       <find>Touched</find>
       <find>hit = tr</find>
@@ -80,7 +124,6 @@
       <find>Projectile(²</find>
       <find>.hit = true</find>
       <find>arrow</find>
-      <find>projecti</find>
       <find>self.ontouc</find>
       <find>ai</find>
       <find>projectile(</find>
@@ -96,6 +139,12 @@
       <find>player.pro</find>
       <find>boss(</find>
       <find>player.project</find>
+      <find>projecti</find>
+      <find>ch</find>
+      <find>player =</find>
+      <find>sound_a</find>
+      <find>SOUND_RE</find>
+      <find>Spinner</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\Pendragon\PycharmProjects\JamGame</dir>
@@ -120,10 +169,10 @@
         <option value="$PROJECT_DIR$/.flooignore" />
         <option value="$PROJECT_DIR$/resources/test_script/pygame08MouseCursor.py" />
         <option value="$PROJECT_DIR$/my_utils.py" />
+        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/ais.py" />
         <option value="$PROJECT_DIR$/character.py" />
         <option value="$PROJECT_DIR$/parametters.py" />
-        <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
   </component>
@@ -152,12 +201,6 @@
               <item name="JamGame" type="b2602c69:ProjectViewProjectNode" />
               <item name="JamGame" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="JamGame" type="b2602c69:ProjectViewProjectNode" />
-              <item name="JamGame" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="images" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="JamGame" type="b2602c69:ProjectViewProjectNode" />
@@ -291,12 +334,12 @@
       <workItem from="1553387880983" duration="5677000" />
       <workItem from="1553393570357" duration="13633000" />
       <workItem from="1553409627928" duration="121000" />
-      <workItem from="1553409750098" duration="13409000" />
+      <workItem from="1553409750098" duration="15442000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="69975000" />
+    <option name="totallyTimeSpent" value="72008000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -311,12 +354,12 @@
     <frame x="-8" y="-8" width="1618" height="887" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.81782943" visible="true" weight="0.31001285" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.81782943" visible="true" weight="0.31001285" />
       <window_info id="Structure" order="1" sideWeight="0.18217054" side_tool="true" weight="0.31001285" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32980132" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3165563" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3165563" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -361,6 +404,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/parametters.py</url>
+          <line>35</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.floo">
@@ -493,6 +547,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3 10.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3 2.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/EBD3C2BE-8FC8-41EA-BFB6-FCD7C9089A5C.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3 7.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/images/onglet_bw.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/button_bw.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/my_utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="48">
@@ -503,51 +575,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ais.py">
+    <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="7" column="37" lean-forward="true" selection-start-line="7" selection-start-column="37" selection-end-line="7" selection-end-column="37" />
+        <state relative-caret-position="171">
+          <caret line="76" column="18" selection-start-line="76" selection-start-column="9" selection-end-line="76" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3 10.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3 7.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/0BCDF400-CF4C-4523-A769-2B4D6FC35EC3 2.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/images/EBD3C2BE-8FC8-41EA-BFB6-FCD7C9089A5C.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/images/onglet_bw.png">
-      <provider selected="true" editor-type-id="images" />
+    <entry file="file://$PROJECT_DIR$/ais.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="443">
+          <caret line="98" column="8" selection-start-line="98" selection-start-column="8" selection-end-line="98" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/parametters.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="26" column="22" selection-start-line="26" selection-start-column="22" selection-end-line="26" selection-end-column="22" />
+        <state relative-caret-position="128">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/character.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="425" column="41" lean-forward="true" selection-start-line="425" selection-start-column="41" selection-end-line="425" selection-end-column="41" />
+        <state relative-caret-position="291">
+          <caret line="399" column="91" selection-start-line="399" selection-start-column="78" selection-end-line="399" selection-end-column="91" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="42" column="45" selection-start-line="42" selection-start-column="45" selection-end-line="42" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>

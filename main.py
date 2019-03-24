@@ -3,14 +3,7 @@ import os
 from character import *
 from my_utils import *
 
-
 def play_normal_sound():
-    # pygame.mixer.Channel(0).play(pygame.mixer.Sound('boss.ogg'))
-    pygame.mixer.music.load(SOUND_RESOURCES + 'idle.ogg')
-    pygame.mixer.music.play(-1)
-
-
-def play_boss_sound():
     pygame.mixer.music.load(SOUND_RESOURCES + 'idle.ogg')
     pygame.mixer.music.play(-1)
 
@@ -36,7 +29,6 @@ def init_screen():
         print("height  =" + str(height))
 
     pygame.display.set_caption('Clickb8')
-    play_normal_sound()
     pv_image = pygame.image.load(IMAGE_RESOURCES + 'onglet_bw.png')
     pv_image = pygame.transform.scale(pv_image, ONGLET_DIMENSION)
     inital_pv_x, inital_pv_y = 30, 20
@@ -105,6 +97,7 @@ boss.rigid_bodies.append(rigid_bodies[0])
 player.collision_listeners.extend(boss.projectiles)
 characters = [player, boss]
 
+
 ennemies = [Ennemy(screen)] * 1
 
 for ennemy in ennemies:
@@ -133,7 +126,6 @@ def look_toward_the_mouse(player):
     player.orientation = RIGHT if player.rect.centerx < m_x else LEFT
 
 
-i = 0
 while 1:
     clock.tick(60)  # 60 FPS (frames per second)
 

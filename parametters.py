@@ -5,6 +5,8 @@ LEFT = "Left"
 UP = "Up"
 DOWN = "Down"
 
+ATTACK_SOUND = 'Shoot_01.ogg'
+SPINNER_SOUND = 'Spinner_01.ogg'
 
 PLAYER_HP = 10
 MOB_HP = 1
@@ -24,7 +26,7 @@ POPUP_DIMENSIONS = (150, 150)
 RIGID_BODY_DIMENSIONS = (25, 25)
 PROJECTILE_DIMENSIONS = (30, 30)
 ARROW_DIMENSIONS = (150, 114)
-ONGLET_DIMENSION = (150, 150)
+ONGLET_DIMENSION = (60, 30)
 JUMP_MULTIPLIER = 2.5
 
 # Projectile-Related info
@@ -41,6 +43,10 @@ ANIMATION_TIME = 0.2
 IMAGE_RESOURCES = "resources/images/"
 SOUND_RESOURCES = "resources/sounds/"
 
+#TIMERS
+BOSS_TIMER = 600
+
 VERBOSE = True
 
 num_worker_threads = 4
+

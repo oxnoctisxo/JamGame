@@ -53,6 +53,7 @@ class EnnemyBehavior:
 
                 if character.hit:
                     character.hp -= 1
+                    character.hit = False
                     if character.hp <= 0:
                         character.set_active(False)
         self.clean()
@@ -87,10 +88,16 @@ class EnemyAIBoss:
             moving_circle.append(tuuple)
         self.routine_func = moving_circle
         self.i = 0
+        self.j = 600
 
     def update(self):
         if self.i > len(self.routine_func) - 1:
             self.i = 0
+        if self.j < BOSS_TIMER:
+            self.j += 1
+        if self.j == BOSS_TIMER:
+            self.character.set_active(True)
+
 
         self.character.move_up(self.routine_func[self.i][2])
         self.character.move_down(self.routine_func[self.i][3])
@@ -98,7 +105,10 @@ class EnemyAIBoss:
         self.character.move_right(self.routine_func[self.i][1])
         self.i += 1
         if self.character.hit:
+            self.character.hit = False
             self.character.hp -= 1
             if self.character.hp <= 0:
                 self.character.set_active(False)
+                self.j = 0
+                self.i = 0
         self.character.attack()

@@ -182,7 +182,7 @@ class Character(HitBox):
                 self.projectiles.pop(cmpt)
 
     def attacking_sound(self):
-        pass
+        pygame.mixer.Channel(1).play(pygame.mixer.Sound(SOUND_RESOURCES + ATTACK_SOUND))
 
     def attack(self):
         if self.type == PLAYER_TYPE:
@@ -396,6 +396,8 @@ class Projectile(Character):
                     self.jumping_animation_indice = 0
 
         self.manage_jump()
+        if self.name.lower() == "spinner":
+            pygame.mixer.Channel(1).play(pygame.mixer.Sound(SOUND_RESOURCES + SPINNER_SOUND))
 
     def orient(self, image, rect, orientation=RIGHT):
         if self.spin_direction == 0:
@@ -410,7 +412,7 @@ class Projectile(Character):
     def blitme(self):
         if self.is_active:
             self.orient(self.image, self.rect, self.orientation)
-            self.spin_direction = ((self.spin_direction + 1 )% 4)
+            self.spin_direction = ((self.spin_direction + 1) % 4)
 
 
 class Ennemy(Character):
@@ -427,6 +429,19 @@ class Ennemy(Character):
             self.hit = True
 
 
+class Hero(Character):
+
+    def __init__(self, screen, name="Paladin", is_forward=False, dimensions=CHARACTER_DIMENSIONS):
+        super().__init__(screen, name, is_forward, dimensions)
+        self.type = PLAYER_TYPE
+
+    def ontouch(self, collision_listener):
+        if self.is_active and collision_listener.is_active and self.type != collision_listener.type:
+            self.hp = self.hp - 1
+            if self.hp == 0:
+                self.set_active(False)
+
+
 class Boss(Character):
 
     def __init__(self, screen, player=None, name="Boss", is_forward=False, dimensions=BOSS_DIMENSION):
@@ -435,7 +450,7 @@ class Boss(Character):
         self.speed_y = self.speed_y + rand.randint(-1, 1)
         self.initial_speed = self.initial_speed + rand.randint(-2, 2)
         self.player = player
-        self.hp = 600
+        self.hp = 10
         self.play_boss_sound()
         self.type = ENNEMY_TYPE
         self.shotting_wait = 1
@@ -466,6 +481,7 @@ class Boss(Character):
             self.play_normal_sound()
         else:
             self.is_active = True
+            self.hp = 50
 
     def attack(self):
         current_time = time.time()
